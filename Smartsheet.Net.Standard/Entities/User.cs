@@ -11,9 +11,9 @@ namespace Smartsheet.NET.Standard.Entities
 
         }
 
-        public long Id { get; set; }
+        public long? Id { get; set; }
 
-        public int SheetCount { get; set; }
+        public int? SheetCount { get; set; }
 
         public string Email { get; set; }
         public string Name { get; set; }
@@ -21,13 +21,13 @@ namespace Smartsheet.NET.Standard.Entities
         public string LastName { get; set; }
         public string Status { get; set; }
 
-        public bool Admin { get; set; }
-        public bool LicensedSheetCreator { get; set; }
-        public bool GroupAdmin { get; set; }
-        public bool ResourceViewer { get; set; }
+        public bool? Admin { get; set; }
+        public bool? LicensedSheetCreator { get; set; }
+        public bool? GroupAdmin { get; set; }
+        public bool? ResourceViewer { get; set; }
 
-        public DateTime LastLogin { get; set; }
-        public DateTime CustomWelcomeScreenViewed { get; set; }
+        public DateTime? LastLogin { get; set; }
+        public DateTime? CustomWelcomeScreenViewed { get; set; }
 
         public ICollection<AlternateEmail> AlternateEmails { get; set; }
     }
