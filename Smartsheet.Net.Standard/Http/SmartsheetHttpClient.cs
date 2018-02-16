@@ -1003,6 +1003,47 @@ namespace Smartsheet.NET.Standard.Http
 
         }
 
+        public async Task<ISmartsheetObject> UpdateUser(long userID, bool admin, bool licensedSheetCreator, string accessToken = null, string fullName = null, string firstName = null, string lastName = null, string groupAdmin = null, string resourceViewer = null)
+        {
+            var thisUser = new User();
+            thisUser.Admin = admin;
+            thisUser.LicensedSheetCreator = licensedSheetCreator;
+            thisUser.FirstName = firstName;
+            thisUser.LastName = lastName;
+            thisUser.Name = fullName;
+
+            if (groupAdmin.ToLower() == "true")
+            {
+                thisUser.GroupAdmin = true; 
+            }
+
+            else if (groupAdmin.ToLower() == "false")
+            {
+                thisUser.GroupAdmin = false;
+            }
+            else {
+                thisUser.GroupAdmin = null;
+            }
+
+            if (resourceViewer.ToLower() == "true")
+            {
+                thisUser.ResourceViewer = true;
+            }
+
+            else if (resourceViewer.ToLower() == "false")
+            {
+                thisUser.ResourceViewer = false;
+            }
+            else {
+                thisUser.ResourceViewer = null;
+            }
+
+            var thisURL = string.Format("/users/{0}", userID);
+            var response = await this.ExecuteRequest<ResultResponse<User>, User>(HttpVerb.PUT, string.Format(thisURL), thisUser, accessToken: accessToken);
+            return response.Result;
+        }
+
+
         #endregion
 
         #region Groups
