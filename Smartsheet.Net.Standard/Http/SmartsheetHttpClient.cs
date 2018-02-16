@@ -1004,5 +1004,71 @@ namespace Smartsheet.NET.Standard.Http
         }
 
         #endregion
+
+        #region Groups
+        public async Task<IEnumerable<Group>> ListOrgGroups(string accessToken = null, bool includeAll = false)
+        {
+            if (includeAll)
+            {
+                var response = await this.ExecuteRequest<IndexResultResponse<Group>, Group>(HttpVerb.GET, string.Format("groups?includeAll=true"), null, accessToken: accessToken);
+                return response.Data;
+
+            }
+            else
+            {
+                var response = await this.ExecuteRequest<IndexResultResponse<Group>, Group>(HttpVerb.GET, string.Format("groups"), null, accessToken: accessToken);
+                return response.Data;
+            }
+
+        }
+
+        public async Task<Group> CreateGroup(string groupName, string description = null,  List<GroupMember> members = null, string accessToken = null)
+        {
+            
+            if (string.IsNullOrWhiteSpace(groupName))
+            {
+                throw new Exception("Group Name cannot be null or blank");
+            }
+
+            var group = new Group(groupName, description, members);
+            var response = await this.ExecuteRequest<ResultResponse<Group>, Group>(HttpVerb.POST, string.Format("groups"), group, accessToken: accessToken);
+            return response.Result;
+
+        }
+
+        public async Task<Group> DeleteGroup(long groupId, string accessToken = null)
+        {
+            var response = await this.ExecuteRequest<ResultResponse<Group>, Group>(HttpVerb.DELETE, string.Format("groups/{0}", groupId), null, accessToken: accessToken);
+            return response.Result;
+        }
+
+        public async Task<Group> GetGroup(long? groupId, string accessToken = null)
+        {
+            var response = await this.ExecuteRequest<Group, Group>(HttpVerb.GET, string.Format("groups/{0}", groupId), null, accessToken: accessToken);
+            return response;
+        }
+
+        public async Task<Group> UpdateGroup(long groupId, string groupName = null, string description = null, long? ownerId = null, string accessToken = null)
+        {
+            var this_group = new Group();
+            this_group.Description = description;
+            this_group.Name = groupName;
+            this_group.OwnerId = ownerId;
+            var response = await this.ExecuteRequest<ResultResponse<Group>, Group>(HttpVerb.PUT, string.Format("groups/{0}", groupId), this_group, accessToken: accessToken);
+            return response.Result;
+        }
+
+        public async Task<GroupMember> AddGroupMembers(long groupId, List<GroupMember> newMembers = null, string accessToken = null)
+        {
+            var response = await this.ExecuteRequest<ResultResponse<GroupMember>, List<GroupMember>> (HttpVerb.POST, string.Format("groups/{0}/members", groupId), newMembers, accessToken: accessToken);
+            return response.Result;
+        }
+
+        public async Task<GroupMember> RemoveGroupMember(long groupId, long userId, string accessToken = null)
+        {
+            var response = await this.ExecuteRequest<ResultResponse<GroupMember>, List<GroupMember>>(HttpVerb.DELETE, string.Format("groups/{0}/members/{1}", groupId, userId), null, accessToken: accessToken);
+            return response.Result;
+        }
+        #endregion
     }
 }
