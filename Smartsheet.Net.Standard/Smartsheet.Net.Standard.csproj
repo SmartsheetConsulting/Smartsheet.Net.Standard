@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Smartsheet.Net.Standard</PackageId>
-    <PackageVersion>2.0.1</PackageVersion>
+    <PackageVersion>2.0.3</PackageVersion>
     <Authors>Austen DeWolf, Bobby Dick, Seth Martin</Authors>
     <Description>Smartsheet C# SDK to facilitate HTTP Requests operations against the Smartsheet API (api.smartsheet.com)</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Updates User.cs class properties to make them nullable, allowing proper posting to Smartsheet API</PackageReleaseNotes>
+    <PackageReleaseNotes>Adds support for updating a User object using the Smartsheet API</PackageReleaseNotes>
     <Copyright>Copyright 2018 (c)</Copyright>
     <PackageTags>smartsheet professional-services sdk</PackageTags>
   </PropertyGroup>
