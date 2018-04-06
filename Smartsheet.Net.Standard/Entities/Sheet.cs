@@ -162,8 +162,15 @@ namespace Smartsheet.NET.Standard.Entities
 
             var response = await this._Client.ExecuteRequest<ResultResponse<IEnumerable<Row>>, IEnumerable<Row>>(HttpVerb.POST, string.Format("sheets/{0}/rows", this.Id), rows, accessToken: accessToken);
 
-			return response.Result;
-		}
+            foreach (var row in response.Result)
+            {
+                this.Rows.Add(row);
+            }
+
+            this.MapCellsToColumns();
+
+            return response.Result;
+        }
 
         public async Task<IEnumerable<Row>> UpdateRows(IList<Row> rows, bool? strict = false, bool? toTop = null, bool? toBottom = null, bool? above = null, long? parentId = null, long? siblingId = null, string accessToken = null)
 		{
@@ -200,7 +207,14 @@ namespace Smartsheet.NET.Standard.Entities
 
             var response = await this._Client.ExecuteRequest<ResultResponse<IEnumerable<Row>>, IEnumerable<Row>>(HttpVerb.PUT, string.Format("sheets/{0}/rows", this.Id), rows, accessToken: accessToken);
 
-			return response.Result;
+            foreach (var row in response.Result)
+            {
+                this.Rows.Add(row);
+            }
+
+            this.MapCellsToColumns();
+
+            return response.Result;
 		}
 
         public async Task<IEnumerable<long>> RemoveRows(IList<Row> rows, string accessToken = null)
@@ -226,9 +240,12 @@ namespace Smartsheet.NET.Standard.Entities
 			return response.Result;
 		}
 
-        public async Task<Sheet> Refresh() 
+        public async Task Refresh() 
         {
-            return await this._Client.GetSheetById(this.Id);
+            var updateSheet = await this._Client.GetSheetById(this.Id);
+
+            this.Rows = updateSheet.Rows;
+            this.Columns = updateSheet.Columns;
         }
 
 		#endregion

@@ -1,0 +1,19 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workbench ActiveDocument="../HomeDepot.Platform/HomeDepot.Platform/Services/ChangeLogService.cs">
+    <Files>
+      <File FileName="../HomeDepot.Platform/HomeDepot.Platform/Controllers/OfferController.cs" Line="119" Column="54" />
+      <File FileName="../HomeDepot.Platform/HomeDepot.Platform/Services/OfferService.cs" Line="185" Column="1" />
+      <File FileName="../HomeDepot.Platform/HomeDepot.Platform/Controllers/UsersController.cs" Line="25" Column="4" />
+      <File FileName="../HomeDepot.Platform/HomeDepot.Platform/Services/ChangeLogService.cs" Line="270" Column="10" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/adewolf/Github/HomeDepot.Platform/HomeDepot.Platform/Services/WhitelistService.cs" line="71" column="1" />
+      <Breakpoint file="/Users/adewolf/Github/HomeDepot.Platform/HomeDepot.Platform/Services/WhitelistService.cs" line="73" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>

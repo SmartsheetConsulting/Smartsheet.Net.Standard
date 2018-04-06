@@ -375,16 +375,16 @@ namespace Smartsheet.NET.Standard.Http
             return response;
         }
 
-        public async Task<HttpResponseMessage> GetCurrentUserInformation(string url, string accessToken)
+        public async Task<User> GetCurrentUserInformation(string accessToken)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
                 throw new Exception("Provided Smartsheet Access Token cannot be null");
             }
 
-            this._HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            //this._HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            var response = await this._HttpClient.GetAsync(url);
+            var response = await this.ExecuteRequest<User, User>(HttpVerb.GET, string.Format("users/me"), null, accessToken: accessToken);
 
             return response;
         }
@@ -681,7 +681,7 @@ namespace Smartsheet.NET.Standard.Http
 
 
         #region Folders
-        public async Task<IEnumerable<ISmartsheetObject>> GetFoldersForWorkspace(long? workspaceId, string accessToken = null)
+        public async Task<IEnumerable<Folder>> GetFoldersForWorkspace(long? workspaceId, string accessToken = null)
         {
             if (workspaceId == null)
             {

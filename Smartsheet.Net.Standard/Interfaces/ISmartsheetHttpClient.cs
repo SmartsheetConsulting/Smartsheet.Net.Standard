@@ -23,7 +23,7 @@ namespace Smartsheet.NET.Standard.Interfaces
 		Task<HttpResponseMessage> RequestAuthorizationFromEndUser(string url, string clientId, string scopes, string state = "");
 		Task<HttpResponseMessage> ObtainAccessToken(string url, string code, string clientId, string clientSecret, string redirectUri = "");
 		Task<HttpResponseMessage> RefreshAccessToken(string url, string refreshToken, string clientId, string clientSecret, string redirectUri = "");
-		Task<HttpResponseMessage> GetCurrentUserInformation(string url, string accessToken);
+		Task<User> GetCurrentUserInformation(string accessToken);
 
 		//	Workspaces
 		Task<ISmartsheetObject> CreateWorkspace(string workspaceName, string accessToken = null);
@@ -40,7 +40,7 @@ namespace Smartsheet.NET.Standard.Interfaces
 		Task<IEnumerable<Row>> CreateRows(long? sheetId, IEnumerable<Row> rows, bool? toTop = null, bool? toBottom = null, long? parentId = null, long? siblingId = null, string accessToken = null);
 		Task<CopyOrMoveRowResult> MoveRows(long? sourceSheetId, long? destinationSheetId, IEnumerable<long> rowIds, string accessToken = null);
 		Task<CopyOrMoveRowResult> CopyRows(long? sourceSheetId, long? destinationSheetId, IEnumerable<long> rowIds, string accessToken = null);
-		Task<IEnumerable<ISmartsheetObject>> GetFoldersForWorkspace(long? workspaceId, string accessToken = null);
+		Task<IEnumerable<Folder>> GetFoldersForWorkspace(long? workspaceId, string accessToken = null);
 		Task<Folder> GetFolderById(long? folderId, string accessToken = null);
 
 		//	Reports
