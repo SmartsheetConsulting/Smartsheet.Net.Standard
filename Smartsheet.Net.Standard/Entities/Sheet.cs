@@ -85,13 +85,17 @@ namespace Smartsheet.NET.Standard.Entities
 				{
 					var parsedColumns = this.Columns.ToList();
 					var parsedCells = row.Cells.ToList();
+                    var parsedCellCount = parsedCells.Count;
 
 					for (var i = 0; i < parsedColumns.Count; i++)
 					{
-						var cell = parsedCells[i];
+                        if (i < parsedCellCount)
+                        {
+                            var cell = parsedCells[i];
 
-						cell.ColumnId = parsedColumns[i].Id;
-						cell.Column = parsedColumns[i];
+                            cell.ColumnId = parsedColumns[i].Id;
+                            cell.Column = parsedColumns[i];
+                        }
 					}
 				}
 			}
