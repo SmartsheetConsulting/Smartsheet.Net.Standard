@@ -190,7 +190,7 @@ namespace Smartsheet.NET.Standard.Entities
 					{
 						rows[i].Cells[x].Build(strict);
 
-						if (rows[i].Cells[x].Value == null || systemColumns.Contains(rows[i].Cells[x].ColumnId))
+                        if ((rows[i].Cells[x].Value == null && String.IsNullOrWhiteSpace(rows[i].Cells[x].Formula) && rows[i].Cells[x].LinkInFromCell == null) || systemColumns.Contains(rows[i].Cells[x].ColumnId))
 						{
 							removeCells.Add(rows[i].Cells[x]);
 						}

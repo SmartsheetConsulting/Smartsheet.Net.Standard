@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using Smartsheet.Net.Standard.Interfaces;
 
 namespace Smartsheet.NET.Standard.Entities
@@ -64,6 +65,7 @@ namespace Smartsheet.NET.Standard.Entities
 
 		public long? ColumnId { get; set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
 		public dynamic Value { get; set; }
 
 		public string DisplayValue { get; set; }
