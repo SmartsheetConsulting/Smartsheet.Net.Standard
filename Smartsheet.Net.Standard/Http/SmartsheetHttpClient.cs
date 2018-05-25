@@ -96,6 +96,7 @@ namespace Smartsheet.NET.Standard.Http
             //this.ValidateRequestInjectedType(typeof(T));
 
             this._HttpClient.DefaultRequestHeaders.Remove("Authorization");
+            this._HttpClient.DefaultRequestHeaders.Remove("Smartsheet-Change-Agent");
 
             if (accessToken != null)
             {
