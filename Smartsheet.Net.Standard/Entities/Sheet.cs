@@ -126,6 +126,14 @@ namespace Smartsheet.NET.Standard.Entities
 			return column;
 		}
 
+	    public Cell GetCellByKeyValueLookup(string key, string keyColumnTitle, string valueColumnTitle, bool caseSensitive = true)
+	    {
+            if (!caseSensitive)
+                key = key?.Trim().ToLower();
+
+	        return this.Rows.FirstOrDefault(r => r.GetValueForColumnAsString(keyColumnTitle) == key)?.GetCellForColumn(valueColumnTitle);
+	    }
+
 		#endregion
 
 		//
