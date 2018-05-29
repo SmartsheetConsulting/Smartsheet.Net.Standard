@@ -211,7 +211,7 @@ namespace Smartsheet.NET.Standard.Http
                             throw new Exception(string.Format("HTTP Error {0}: url:[{1}]", statusCode, url));
                         }
 
-                        var message = string.Format("Smartsheet error code {0}: {1} url:[{2}]", result["errorCode"], result["message"], url);
+						var message = string.Format("HTTP Error {0} - Smartsheet error code {1}: {2} url:[{3}]", statusCode, result["errorCode"], result["message"], url);
 
                         throw new Exception(message);
                     }
