@@ -89,32 +89,34 @@ namespace Smartsheet.NET.Standard.Http
         /// <param name="secure">If set to <c>true</c> secure.</param>
         /// <typeparam name="TResult">The 1st type parameter.</typeparam>
         /// <typeparam name="T">The 2nd type parameter.</typeparam>
-        public async Task<TResult> ExecuteRequest<TResult, T>(HttpVerb verb, string url, T data, string accessToken = null)
+        public async Task<TResult> ExecuteRequest<TResult, T>(HttpVerb verb, string url, T data, string accessToken = null, FormUrlEncodedContent content = null)
         {
             this.ValidateRequestInjectedResult(typeof(TResult));
 
-            //this.ValidateRequestInjectedType(typeof(T));
-
-            this._HttpClient.DefaultRequestHeaders.Remove("Authorization");
-            this._HttpClient.DefaultRequestHeaders.Remove("Smartsheet-Change-Agent");
-
-            if (accessToken != null)
+            if (content == null)
             {
-                this._HttpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
-            }
-            else
-            {
-                this._HttpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + this._AccessToken);
+                this._HttpClient.DefaultRequestHeaders.Remove("Authorization");
+
+                this._HttpClient.DefaultRequestHeaders.Remove("Smartsheet-Change-Agent");
+
+                if (accessToken != null)
+                {
+                    this._HttpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
+                }
+                else
+                {
+                    this._HttpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + this._AccessToken);
+                }
+
+                if (this._ChangeAgent != null)
+                {
+                    this._HttpClient.DefaultRequestHeaders.Add("Smartsheet-Change-Agent", this._ChangeAgent);
+                }
+
+                this.ValidateClientParameters();
             }
 
-            if (this._ChangeAgent != null)
-            {
-                this._HttpClient.DefaultRequestHeaders.Add("Smartsheet-Change-Agent", this._ChangeAgent);
-            }
-
-            this.ValidateClientParameters();
-
-            this.InitiazeNewRequest();
+            this.InitializeNewRequest();
 
             while (_RetryRequest && (_RetryCount < _AttemptLimit))
             {
@@ -142,10 +144,24 @@ namespace Smartsheet.NET.Standard.Http
                             response = await this._HttpClient.GetAsync(url);
                             break;
                         case HttpVerb.PUT:
-                            response = await this._HttpClient.PutAsync(url, new StringContent(serializedData, System.Text.Encoding.UTF8, "application/json"));
+                            if (content == null)
+                            {
+                                response = await this._HttpClient.PutAsync(url, new StringContent(serializedData, System.Text.Encoding.UTF8, "application/json"));
+                            }
+                            else
+                            {
+                                response = await this._HttpClient.PutAsync(url, content);
+                            }
                             break;
                         case HttpVerb.POST:
-                            response = await this._HttpClient.PostAsync(url, new StringContent(serializedData, System.Text.Encoding.UTF8, "application/json"));
+                            if (content == null)
+                            {
+                                response = await this._HttpClient.PostAsync(url, new StringContent(serializedData, System.Text.Encoding.UTF8, "application/json"));
+                            }
+                            else
+                            {
+                                response = await this._HttpClient.PostAsync(url, content);
+                            }
                             break;
                         case HttpVerb.DELETE:
                             response = await this._HttpClient.DeleteAsync(url);
@@ -212,7 +228,7 @@ namespace Smartsheet.NET.Standard.Http
                             throw new Exception(string.Format("HTTP Error {0}: url:[{1}]", statusCode, url));
                         }
 
-						var message = string.Format("HTTP Error {0} - Smartsheet error code {1}: {2} url:[{3}]", statusCode, result["errorCode"], result["message"], url);
+                        var message = string.Format("HTTP Error {0} - Smartsheet error code {1}: {2} url:[{3}]", statusCode, result["errorCode"], result["message"], url);
 
                         throw new Exception(message);
                     }
@@ -295,7 +311,7 @@ namespace Smartsheet.NET.Standard.Http
         /// <summary>
         /// Initiazes the new request.
         /// </summary>
-        private void InitiazeNewRequest()
+        private void InitializeNewRequest()
         {
             this._WaitTime = 0;
             this._RetryCount = 0;
@@ -328,7 +344,7 @@ namespace Smartsheet.NET.Standard.Http
             return response;
         }
 
-        public async Task<HttpResponseMessage> ObtainAccessToken(string url, string code, string clientId, string clientSecret, string redirectUri = "")
+        public async Task<Token> ObtainAccessToken(string url, string code, string clientId, string clientSecret, string redirectUri = "")
         {
             if (string.IsNullOrWhiteSpace(code))
             {
@@ -346,13 +362,13 @@ namespace Smartsheet.NET.Standard.Http
             });
 
             content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
-
-            var response = await this._HttpClient.PostAsync(url, content);
+            
+            var response = await this.ExecuteRequest<Token, Token>(HttpVerb.POST, url, null, content: content);         
 
             return response;
         }
 
-        public async Task<HttpResponseMessage> RefreshAccessToken(string url, string refreshToken, string clientId, string clientSecret, string redirectUri = "")
+        public async Task<Token> RefreshAccessToken(string url, string refreshToken, string clientId, string clientSecret, string redirectUri = "")
         {
             if (string.IsNullOrWhiteSpace(refreshToken))
             {
@@ -369,9 +385,9 @@ namespace Smartsheet.NET.Standard.Http
                 new KeyValuePair<string, string>("hash", hash)
             });
 
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");         
 
-            var response = await this._HttpClient.PostAsync(url, content);
+            var response = await this.ExecuteRequest<Token, Token>(HttpVerb.POST, url, null, content: content);
 
             return response;
         }
@@ -1039,9 +1055,9 @@ namespace Smartsheet.NET.Standard.Http
 
         }
 
-        public async Task<Group> CreateGroup(string groupName, string description = null,  List<GroupMember> members = null, string accessToken = null)
+        public async Task<Group> CreateGroup(string groupName, string description = null, List<GroupMember> members = null, string accessToken = null)
         {
-            
+
             if (string.IsNullOrWhiteSpace(groupName))
             {
                 throw new Exception("Group Name cannot be null or blank");
@@ -1077,7 +1093,7 @@ namespace Smartsheet.NET.Standard.Http
 
         public async Task<GroupMember> AddGroupMembers(long groupId, List<GroupMember> newMembers = null, string accessToken = null)
         {
-            var response = await this.ExecuteRequest<ResultResponse<GroupMember>, List<GroupMember>> (HttpVerb.POST, string.Format("groups/{0}/members", groupId), newMembers, accessToken: accessToken);
+            var response = await this.ExecuteRequest<ResultResponse<GroupMember>, List<GroupMember>>(HttpVerb.POST, string.Format("groups/{0}/members", groupId), newMembers, accessToken: accessToken);
             return response.Result;
         }
 
