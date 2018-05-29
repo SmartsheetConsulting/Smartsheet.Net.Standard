@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Smartsheet.Net.Standard</PackageId>
-    <PackageVersion>2.0.4</PackageVersion>
+    <PackageVersion>2.0.5</PackageVersion>
     <Authors>Austen DeWolf, Bobby Dick, Seth Martin</Authors>
     <Description>Smartsheet C# SDK to facilitate HTTP Requests operations against the Smartsheet API (api.smartsheet.com)</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Updates to the networking calls from the Sheet.cs class to add/update the Rows property within the class with the results of the networking call.</PackageReleaseNotes>
+    <PackageReleaseNotes>Updates to the sheet class allowing for looking up cells in a key-value pattern. Also, fixed an existing bug where the Change-Agent header was added multiple times during networking calls.</PackageReleaseNotes>
     <Copyright>Copyright 2018 (c)</Copyright>
     <PackageTags>smartsheet professional-services sdk</PackageTags>
   </PropertyGroup>
