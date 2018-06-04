@@ -17,12 +17,12 @@ namespace Smartsheet.NET.Standard.Interfaces
 	public interface ISmartsheetHttpClient
 	{
 		//	Root Request Exection
-		Task<TResult> ExecuteRequest<TResult, T>(HttpVerb verb, string url, T data, string accessToken = null);
+		Task<TResult> ExecuteRequest<TResult, T>(HttpVerb verb, string url, T data, string accessToken = null, FormUrlEncodedContent content = null);
 
 		//	Authorization
 		Task<HttpResponseMessage> RequestAuthorizationFromEndUser(string url, string clientId, string scopes, string state = "");
-		Task<HttpResponseMessage> ObtainAccessToken(string url, string code, string clientId, string clientSecret, string redirectUri = "");
-		Task<HttpResponseMessage> RefreshAccessToken(string url, string refreshToken, string clientId, string clientSecret, string redirectUri = "");
+		Task<Token> ObtainAccessToken(string url, string code, string clientId, string clientSecret, string redirectUri = "");
+		Task<Token> RefreshAccessToken(string url, string refreshToken, string clientId, string clientSecret, string redirectUri = "");
 		Task<User> GetCurrentUserInformation(string accessToken);
 
 		//	Workspaces
