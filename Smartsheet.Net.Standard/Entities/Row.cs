@@ -42,6 +42,11 @@ namespace Smartsheet.NET.Standard.Entities
 
 			for (var i = 0; i < this.Cells.Count; i++)
 			{
+			    if (this.Cells[i].LinkInFromCell != null)
+			    {
+			        strict = null;
+                }
+
 				if (this.Cells[i].Value != null || this.Cells[i].Formula != null || this.Cells[i].LinkInFromCell != null)
 				{
 					buildCells.Add(this.Cells[i].Build(strict));
