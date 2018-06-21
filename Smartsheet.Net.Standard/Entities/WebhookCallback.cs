@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace Smartsheet.NET.Standard.Entities
 {
 	public class WebhookCallback
@@ -16,5 +18,6 @@ namespace Smartsheet.NET.Standard.Entities
 		public DateTime Timestamp { get; set; }
 		public string Scope { get; set; }
 		public long? ScopeObjectId { get; set; }
+		public List<WebhookCallbackEvent> Events { get; set; }
 	}
 }
