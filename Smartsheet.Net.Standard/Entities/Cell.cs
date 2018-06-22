@@ -50,11 +50,6 @@ namespace Smartsheet.NET.Standard.Entities
 			this.Column = null;
 			this.Strict = strict;
 
-			if (this.Hyperlink != null)
-			{
-				this.Hyperlink.Url = null;
-			}
-
             if (!string.IsNullOrWhiteSpace(this.Formula))
             {
                 this.Value = null;
