@@ -9,6 +9,7 @@ namespace Smartsheet.NET.Standard.Entities
 
 		public string ObjectType { get; set; }
 		public string EventType { get; set; }
+		public string ChangeAgent { get; set; }
 		public long? Id { get; set; }
 		public long? RowId { get; set; }
 		public long? ColumnId { get; set; }
