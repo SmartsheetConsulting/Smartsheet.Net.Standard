@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Smartsheet.Net.Standard</PackageId>
-    <PackageVersion>2.0.5</PackageVersion>
+    <PackageVersion>2.0.6</PackageVersion>
     <Authors>Austen DeWolf, Bobby Dick, Seth Martin</Authors>
     <Description>Smartsheet C# SDK to facilitate HTTP Requests operations against the Smartsheet API (api.smartsheet.com)</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Updates to the sheet class allowing for looking up cells in a key-value pattern. Also, fixed an existing bug where the Change-Agent header was added multiple times during networking calls.</PackageReleaseNotes>
+    <PackageReleaseNotes>Updates to authentication methods which previously returned raw network calls, to not return a deserialized result. Additionally, add new properties to WebhookCallbackEvent.</PackageReleaseNotes>
     <Copyright>Copyright 2018 (c)</Copyright>
     <PackageTags>smartsheet professional-services sdk</PackageTags>
   </PropertyGroup>
