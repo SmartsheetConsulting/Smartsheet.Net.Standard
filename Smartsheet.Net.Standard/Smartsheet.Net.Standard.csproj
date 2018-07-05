@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Smartsheet.Net.Standard</PackageId>
-    <PackageVersion>2.0.6</PackageVersion>
+    <PackageVersion>2.0.7</PackageVersion>
     <Authors>Austen DeWolf, Bobby Dick, Seth Martin</Authors>
     <Description>Smartsheet C# SDK to facilitate HTTP Requests operations against the Smartsheet API (api.smartsheet.com)</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Updates to authentication methods which previously returned raw network calls, to not return a deserialized result. Additionally, add new properties to WebhookCallbackEvent.</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixes bug in Sheet.UpdateRows() that caused duplicate row objects on the in-memory Sheet object. Adds LinksOutToCells property to Cell class.</PackageReleaseNotes>
     <Copyright>Copyright 2018 (c)</Copyright>
     <PackageTags>smartsheet professional-services sdk</PackageTags>
   </PropertyGroup>
