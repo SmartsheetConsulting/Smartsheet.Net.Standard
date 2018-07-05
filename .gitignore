@@ -38,3 +38,10 @@ Thumbs.db
 
 # dotCover
 *.dotCover
+.vs/Smartsheet.Net.Standard/xs/sqlite3/db.lock
+.vs/Smartsheet.Net.Standard/xs/sqlite3/storage.ide
+.vs/Smartsheet.Net.Standard/xs/sqlite3/storage.ide-shm
+.vs/Smartsheet.Net.Standard/xs/sqlite3/storage.ide-wal
+.vs/Smartsheet.Net.Standard/xs/UserPrefs.xml
+.vs/Smartsheet.Net.Standard/xs/UserPrefs.xml
+.vs/Smartsheet.Net.Standard/xs/UserPrefs.xml
