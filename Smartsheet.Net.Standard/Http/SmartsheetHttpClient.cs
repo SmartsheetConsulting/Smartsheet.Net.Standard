@@ -864,9 +864,9 @@ namespace Smartsheet.NET.Standard.Http
 
 
         #region Webhooks
-        public async Task<IEnumerable<Webhook>> GetWebhooksForUser(string accessToken = null)
+        public async Task<IEnumerable<Webhook>> GetWebhooksForUser(string accessToken = null, bool includeAll = false)
         {
-            var result = await this.ExecuteRequest<IndexResultResponse<Webhook>, Webhook>(HttpVerb.GET, "webhooks", null, accessToken: accessToken);
+            var result = await this.ExecuteRequest<IndexResultResponse<Webhook>, Webhook>(HttpVerb.GET, string.Format("webhooks?includeAll={0}", includeAll ? "true" : "false"), null, accessToken: accessToken);
 
             return result.Data;
         }
