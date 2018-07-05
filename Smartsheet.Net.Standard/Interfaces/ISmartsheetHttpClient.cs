@@ -56,7 +56,7 @@ namespace Smartsheet.NET.Standard.Interfaces
         Task<MultiRowEmail> CreateSendRow(long? sheetId, MultiRowEmail email, string accessToken = null);
 
 		//	Webhooks
-		Task<IEnumerable<Webhook>> GetWebhooksForUser(string accessToken = null);
+		Task<IEnumerable<Webhook>> GetWebhooksForUser(string accessToken = null, bool includeAll = false);
 		Task<Webhook> GetWebhook(long? webhookId, string accessToken = null);
 		Task<Webhook> CreateWebhook(Webhook model, string accessToken = null);
 		Task<Webhook> UpdateWebhook(long? webhookId, Webhook model, string accessToken = null);
