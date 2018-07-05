@@ -221,7 +221,7 @@ namespace Smartsheet.NET.Standard.Entities
 
             foreach (var row in response.Result)
             {
-                this.Rows.Add(row);
+                this.Rows[(int)(row.RowNumber - 1)] = row;
             }
 
             this.MapCellsToColumns();
