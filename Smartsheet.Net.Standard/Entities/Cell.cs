@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Smartsheet.Net.Standard.Interfaces;
 
@@ -74,5 +75,7 @@ namespace Smartsheet.NET.Standard.Entities
 		public Column Column { get; set; }
 
 		public CellLink LinkInFromCell { get; set; }
+
+		public IList<CellLink> LinksOutToCells { get; set; }
 	}
 }
