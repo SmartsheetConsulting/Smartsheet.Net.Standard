@@ -1,18 +1,14 @@
-﻿using Smartsheet.NET.Standard.Http;
+﻿using Smartsheet.Net.Standard.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Smartsheet.NET.Standard.Entities;
+using Smartsheet.Net.Standard.Entities;
 using System.Net.Http;
-using Smartsheet.NET.Standard.Interfaces;
-using Smartsheet.NET.Standard.Definitions;
-using Smartsheet.NET.Standard.Responses;
+using Smartsheet.Net.Standard.Definitions;
+using Smartsheet.Net.Standard.Responses;
 using System.IO;
 using Microsoft.AspNetCore.Http;
-using Smartsheet.Net.Standard;
-using Smartsheet.Net.Standard.Interfaces;
-using Smartsheet.Net.Standard.Entities;
 
-namespace Smartsheet.NET.Standard.Interfaces
+namespace Smartsheet.Net.Standard.Interfaces
 {
 	public interface ISmartsheetHttpClient
 	{

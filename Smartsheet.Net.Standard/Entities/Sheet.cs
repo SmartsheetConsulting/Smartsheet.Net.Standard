@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Smartsheet.NET.Standard.Http;
+using Smartsheet.Net.Standard.Http;
 using System.Threading.Tasks;
 using Smartsheet.Net.Standard.Responses;
 
-namespace Smartsheet.NET.Standard.Entities
+namespace Smartsheet.Net.Standard.Entities
 {
 	public class Sheet : SmartsheetObject
 	{

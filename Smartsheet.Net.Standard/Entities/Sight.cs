@@ -1,9 +1,9 @@
 ﻿using System;
-using Smartsheet.NET.Standard.Entities;
+using Smartsheet.Net.Standard.Interfaces;
 
-namespace Smartsheet.NET.Standard.Entities
+namespace Smartsheet.Net.Standard.Entities
 {
-    public class Sight : SmartsheetObject
+    public class Sight : ISmartsheetObject
     {
         public Sight()
         {

@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Smartsheet.NET.Standard.Definitions
+namespace Smartsheet.Net.Standard.Definitions
 {
 	public enum DestinationType
 	{

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Smartsheet.Net.Standard.Interfaces;
 
-namespace Smartsheet.NET.Standard.Entities
+namespace Smartsheet.Net.Standard.Entities
 {
-    public class Email : SmartsheetObject
+    public class Email : ISmartsheetObject
     {
         public Email()
         {

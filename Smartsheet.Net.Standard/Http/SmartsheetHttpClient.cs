@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
-using Smartsheet.NET.Standard.Definitions;
-using Smartsheet.NET.Standard.Entities;
-using Smartsheet.NET.Standard.Interfaces;
+using Smartsheet.Net.Standard.Definitions;
+using Smartsheet.Net.Standard.Entities;
+using Smartsheet.Net.Standard.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,22 +9,19 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using Newtonsoft.Json.Serialization;
-using Smartsheet.NET.Standard.Responses;
+using Smartsheet.Net.Standard.Responses;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Collections;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Options;
-using Smartsheet.NET.Standard.Configuration;
+using Smartsheet.Net.Standard.Configuration;
 using System.IO;
 using Microsoft.AspNetCore.Http;
-using Smartsheet.Net.Standard.Interfaces;
-using Smartsheet.Net.Standard.Responses;
-using Smartsheet.Net.Standard.Entities;
-using Smartsheet.NET.Standard.Hash;
+using Smartsheet.Net.Standard.Hash;
 
-namespace Smartsheet.NET.Standard.Http
+namespace Smartsheet.Net.Standard.Http
 {
     public class SmartsheetHttpClient : ISmartsheetHttpClient
     {
