@@ -77,5 +77,7 @@ namespace Smartsheet.NET.Standard.Entities
 		public CellLink LinkInFromCell { get; set; }
 
 		public IList<CellLink> LinksOutToCells { get; set; }
+
+		public string Format { get; set; }
 	}
 }
