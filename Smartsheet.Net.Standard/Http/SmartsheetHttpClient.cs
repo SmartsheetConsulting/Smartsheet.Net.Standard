@@ -1,25 +1,26 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Smartsheet.Net.Standard.Definitions;
 using Smartsheet.Net.Standard.Entities;
 using Smartsheet.Net.Standard.Interfaces;
+using Smartsheet.Net.Standard.Configuration;
+using Smartsheet.Net.Standard.Responses;
+using Smartsheet.Net.Standard.Hash;
+using Smartsheet.Net.Standard.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
-using Newtonsoft.Json.Serialization;
-using Smartsheet.Net.Standard.Responses;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Collections;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Net.Http.Headers;
-using Microsoft.Extensions.Options;
-using Smartsheet.Net.Standard.Configuration;
 using System.IO;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
-using Smartsheet.Net.Standard.Hash;
 
 namespace Smartsheet.Net.Standard.Http
 {
@@ -538,7 +539,7 @@ namespace Smartsheet.Net.Standard.Http
 
             if (includes != null && includes.Count() > 0)
             {
-                includeString += string.Format("?include={0}", string.Join(",", includes.Select(i => i.ToString())));
+                includeString += string.Format("?include={0}", string.Join(",", includes.Select(i => i.ToString().ToCamelCase())));
             }
 
             response = await this.ExecuteRequest<ResultResponse<Sheet>, ContainerDestination>(HttpVerb.POST, string.Format("sheets/{0}/copy{1}", sourceSheetId, includeString), container, accessToken: accessToken);
