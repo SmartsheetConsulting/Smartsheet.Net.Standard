@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Smartsheet.NET.Standard.Definitions
+namespace Smartsheet.Net.Standard.Definitions
 {
     public enum Symbol
     {

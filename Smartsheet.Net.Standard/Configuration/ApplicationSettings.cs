@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Smartsheet.NET.Standard.Configuration
+namespace Smartsheet.Net.Standard.Configuration
 {
 	public class ApplicationSettings
 	{

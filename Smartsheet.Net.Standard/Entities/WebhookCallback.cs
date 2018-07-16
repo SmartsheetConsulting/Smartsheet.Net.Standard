@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Smartsheet.NET.Standard.Entities
+namespace Smartsheet.Net.Standard.Entities
 {
 	public class WebhookCallback
 	{

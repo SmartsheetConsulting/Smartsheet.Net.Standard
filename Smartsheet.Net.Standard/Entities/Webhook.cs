@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using Smartsheet.NET.Standard;
-using Smartsheet.NET.Standard.Entities;
 
 namespace Smartsheet.Net.Standard.Entities
 {

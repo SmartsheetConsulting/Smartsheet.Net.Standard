@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Smartsheet.NET.Standard.Definitions;
+using Smartsheet.Net.Standard.Definitions;
 using System;
 using Smartsheet.Net.Standard.Interfaces;
 
-namespace Smartsheet.NET.Standard.Entities
+namespace Smartsheet.Net.Standard.Entities
 {
 	public class Column : ISmartsheetObject
 	{

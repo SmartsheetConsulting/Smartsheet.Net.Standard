@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings;
 
-namespace Smartsheet.NET.Standard.Hash
+namespace Smartsheet.Net.Standard.Hash
 {
 	public static class SHA
 	{

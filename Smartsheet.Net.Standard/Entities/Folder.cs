@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Smartsheet.Net.Standard.Interfaces;
 
-namespace Smartsheet.NET.Standard.Entities
+namespace Smartsheet.Net.Standard.Entities
 {
     public class Folder : ISmartsheetObject
     {

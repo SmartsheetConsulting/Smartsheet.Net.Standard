@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using Smartsheet.Net.Standard.Interfaces;
+﻿using Smartsheet.Net.Standard.Interfaces;
 
-namespace Smartsheet.NET.Standard.Entities
+namespace Smartsheet.Net.Standard.Entities
 {
-    public class GroupMember : SmartsheetObject
+    public class GroupMember : ISmartsheetObject
     {
         public GroupMember()
         {

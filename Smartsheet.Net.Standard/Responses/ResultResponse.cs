@@ -1,4 +1,4 @@
-﻿using Smartsheet.NET.Standard.Interfaces;
+﻿using Smartsheet.Net.Standard.Interfaces;
 using System.Collections.Generic;
 
 namespace Smartsheet.Net.Standard.Responses
