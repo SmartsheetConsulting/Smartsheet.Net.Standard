@@ -23,6 +23,7 @@ using Smartsheet.Net.Standard.Interfaces;
 using Smartsheet.Net.Standard.Responses;
 using Smartsheet.Net.Standard.Entities;
 using Smartsheet.NET.Standard.Hash;
+using Smartsheet.Net.Standard.Extensions;
 
 namespace Smartsheet.NET.Standard.Http
 {
@@ -541,7 +542,7 @@ namespace Smartsheet.NET.Standard.Http
 
             if (includes != null && includes.Count() > 0)
             {
-                includeString += string.Format("?include={0}", string.Join(",", includes.Select(i => i.ToString())));
+                includeString += string.Format("?include={0}", string.Join(",", includes.Select(i => i.ToString().ToCamelCase())));
             }
 
             response = await this.ExecuteRequest<ResultResponse<Sheet>, ContainerDestination>(HttpVerb.POST, string.Format("sheets/{0}/copy{1}", sourceSheetId, includeString), container, accessToken: accessToken);
