@@ -19,7 +19,4 @@
   <ItemGroup>
     <Compile Remove="Interfaces\IPrimitiveObjectValue.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
 </Project>
