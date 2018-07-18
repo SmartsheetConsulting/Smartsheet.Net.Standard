@@ -422,14 +422,14 @@ namespace Smartsheet.Net.Standard.Http
             return response.Result;
         }
 
-        public async Task<ISmartsheetObject> GetWorkspaceById(long? workspaceId, string accessToken = null)
+        public async Task<ISmartsheetObject> GetWorkspaceById(long? workspaceId, string accessToken = null, bool loadAll = false)
         {
             if (workspaceId == null)
             {
                 throw new Exception("Workspace ID cannot be null");
             }
 
-            var response = await this.ExecuteRequest<Workspace, Workspace>(HttpVerb.GET, string.Format("workspaces/{0}", workspaceId), null, accessToken: accessToken);
+			var response = await this.ExecuteRequest<Workspace, Workspace>(HttpVerb.GET, string.Format("workspaces/{0}?loadAll={1}", workspaceId, loadAll ? "true" : "false"), null, accessToken: accessToken);
 
             return response;
         }
@@ -696,14 +696,14 @@ namespace Smartsheet.Net.Standard.Http
 
 
         #region Folders
-        public async Task<IEnumerable<Folder>> GetFoldersForWorkspace(long? workspaceId, string accessToken = null)
+        public async Task<IEnumerable<Folder>> GetFoldersForWorkspace(long? workspaceId, string accessToken = null, bool loadAll = false)
         {
             if (workspaceId == null)
             {
                 throw new Exception("Workspace ID cannot be null");
             }
 
-            var response = await this.ExecuteRequest<Workspace, Workspace>(HttpVerb.GET, string.Format("workspaces/{0}", workspaceId), null, accessToken: accessToken);
+			var response = await this.ExecuteRequest<Workspace, Workspace>(HttpVerb.GET, string.Format("workspaces/{0}?loadAll={1}", workspaceId, loadAll ? "true" : "false"), null, accessToken: accessToken);
 
             return response.Folders;
         }
@@ -750,7 +750,7 @@ namespace Smartsheet.Net.Standard.Http
                 throw new Exception("Workspace ID cannot be null");
             }
 
-            var response = await this.ExecuteRequest<Workspace, Workspace>(HttpVerb.GET, string.Format("workspaces/{0}", workspaceId), null, accessToken: accessToken);
+			var response = await this.ExecuteRequest<Workspace, Workspace>(HttpVerb.GET, string.Format("workspaces/{0}", workspaceId), null, accessToken: accessToken);
 
             return response.Reports;
         }
@@ -773,7 +773,7 @@ namespace Smartsheet.Net.Standard.Http
                 throw new Exception("Workspace ID cannot be null");
             }
 
-            var response = await this.ExecuteRequest<Workspace, Workspace>(HttpVerb.GET, string.Format("workspaces/{0}", workspaceId), null, accessToken: accessToken);
+			var response = await this.ExecuteRequest<Workspace, Workspace>(HttpVerb.GET, string.Format("workspaces/{0}", workspaceId), null, accessToken: accessToken);
 
             return response.Templates;
         }
