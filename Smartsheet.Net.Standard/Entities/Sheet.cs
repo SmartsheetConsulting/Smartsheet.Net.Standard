@@ -184,6 +184,33 @@ namespace Smartsheet.Net.Standard.Entities
             return response.Result;
         }
 
+		public async Task<IEnumerable<Row>> UpdateCellValue(long? rowId, long? columnId, dynamic value, bool? strict = false, string accessToken = null)
+		{
+			var cell = new Cell
+			{
+				ColumnId = columnId,
+				Value = value
+			};
+			return await this.UpdateCell(rowId, cell, strict, accessToken);
+		}
+
+
+		public async Task<IEnumerable<Row>> UpdateCell(long? rowId, Cell cell, bool? strict = false, string accessToken = null)
+		{
+			var row = new Row
+			{
+				Id = rowId,
+				Cells = new List<Cell> { cell }
+			};
+			return await this.UpdateRow(row, strict: strict, accessToken: accessToken);
+		}
+		 
+
+		public async Task<IEnumerable<Row>> UpdateRow(Row row, bool? strict = false, bool? toTop = null, bool? toBottom = null, bool? above = null, long? parentId = null, long? siblingId = null, string accessToken = null)
+		{
+			return await this.UpdateRows(new List<Row> { row }, strict, toTop, toBottom, above, parentId, siblingId, accessToken);
+		}
+
         public async Task<IEnumerable<Row>> UpdateRows(IList<Row> rows, bool? strict = false, bool? toTop = null, bool? toBottom = null, bool? above = null, long? parentId = null, long? siblingId = null, string accessToken = null)
 		{
 			if (rows.Count() > 0)
