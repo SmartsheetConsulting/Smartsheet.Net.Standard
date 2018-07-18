@@ -429,7 +429,7 @@ namespace Smartsheet.Net.Standard.Http
                 throw new Exception("Workspace ID cannot be null");
             }
 
-			var response = await this.ExecuteRequest<Workspace, Workspace>(HttpVerb.GET, string.Format("workspaces/{0}?loadAll={1}", workspaceId, loadAll ? "true" : "false"), null, accessToken: accessToken);
+            var response = await this.ExecuteRequest<Workspace, Workspace>(HttpVerb.GET, string.Format("workspaces/{0}?loadAll={1}", workspaceId, loadAll ? "true" : "false"), null, accessToken: accessToken);
 
             return response;
         }
@@ -703,7 +703,7 @@ namespace Smartsheet.Net.Standard.Http
                 throw new Exception("Workspace ID cannot be null");
             }
 
-			var response = await this.ExecuteRequest<Workspace, Workspace>(HttpVerb.GET, string.Format("workspaces/{0}?loadAll={1}", workspaceId, loadAll ? "true" : "false"), null, accessToken: accessToken);
+            var response = await this.ExecuteRequest<Workspace, Workspace>(HttpVerb.GET, string.Format("workspaces/{0}?loadAll={1}", workspaceId, loadAll ? "true" : "false"), null, accessToken: accessToken);
 
             return response.Folders;
         }
@@ -750,7 +750,7 @@ namespace Smartsheet.Net.Standard.Http
                 throw new Exception("Workspace ID cannot be null");
             }
 
-			var response = await this.ExecuteRequest<Workspace, Workspace>(HttpVerb.GET, string.Format("workspaces/{0}", workspaceId), null, accessToken: accessToken);
+            var response = await this.ExecuteRequest<Workspace, Workspace>(HttpVerb.GET, string.Format("workspaces/{0}", workspaceId), null, accessToken: accessToken);
 
             return response.Reports;
         }
@@ -773,7 +773,7 @@ namespace Smartsheet.Net.Standard.Http
                 throw new Exception("Workspace ID cannot be null");
             }
 
-			var response = await this.ExecuteRequest<Workspace, Workspace>(HttpVerb.GET, string.Format("workspaces/{0}", workspaceId), null, accessToken: accessToken);
+            var response = await this.ExecuteRequest<Workspace, Workspace>(HttpVerb.GET, string.Format("workspaces/{0}", workspaceId), null, accessToken: accessToken);
 
             return response.Templates;
         }
