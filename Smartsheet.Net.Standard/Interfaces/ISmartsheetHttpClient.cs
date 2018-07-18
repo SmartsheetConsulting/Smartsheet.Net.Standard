@@ -23,7 +23,7 @@ namespace Smartsheet.Net.Standard.Interfaces
 
 		//	Workspaces
 		Task<ISmartsheetObject> CreateWorkspace(string workspaceName, string accessToken = null);
-		Task<ISmartsheetObject> GetWorkspaceById(long? workspaceId, string accessToken = null);
+		Task<ISmartsheetObject> GetWorkspaceById(long? workspaceId, string accessToken = null, bool loadAll = false);
 
 		//	Sheets
 		Task<Sheet> GetSheetById(long? sheetId, string accessToken = null);
@@ -36,7 +36,7 @@ namespace Smartsheet.Net.Standard.Interfaces
 		Task<IEnumerable<Row>> CreateRows(long? sheetId, IEnumerable<Row> rows, bool? toTop = null, bool? toBottom = null, long? parentId = null, long? siblingId = null, string accessToken = null);
 		Task<CopyOrMoveRowResult> MoveRows(long? sourceSheetId, long? destinationSheetId, IEnumerable<long> rowIds, string accessToken = null);
 		Task<CopyOrMoveRowResult> CopyRows(long? sourceSheetId, long? destinationSheetId, IEnumerable<long> rowIds, string accessToken = null);
-		Task<IEnumerable<Folder>> GetFoldersForWorkspace(long? workspaceId, string accessToken = null);
+		Task<IEnumerable<Folder>> GetFoldersForWorkspace(long? workspaceId, string accessToken = null, bool loadAll = false);
 		Task<Folder> GetFolderById(long? folderId, string accessToken = null);
 
 		//	Reports
