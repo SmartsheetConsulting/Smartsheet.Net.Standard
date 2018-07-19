@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Smartsheet.Net.Standard</PackageId>
-    <PackageVersion>2.0.8</PackageVersion>
+    <PackageVersion>2.0.9</PackageVersion>
     <Authors>Austen DeWolf, Bobby Dick, Seth Martin</Authors>
     <Description>Smartsheet C# SDK to facilitate HTTP Requests operations against the Smartsheet API (api.smartsheet.com)</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Cleans up namespaces to consistently use Smartsheet.Net.Standard over Smartsheet.NET.Standard, fixes bug in SmartsheetHttpClient.CopySheet(), and adds Format property to Cell object.</PackageReleaseNotes>
+    <PackageReleaseNotes>Introduces the loadAll parameter for GET Workspace calls and adds convenience helpers for updating a single Cell or Row.</PackageReleaseNotes>
     <Copyright>Copyright 2018 (c)</Copyright>
     <PackageTags>smartsheet professional-services sdk</PackageTags>
   </PropertyGroup>
