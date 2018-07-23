@@ -75,6 +75,8 @@ namespace Smartsheet.Net.Standard.Entities
 		public bool? ToTop { get; set; }
 		public bool? ToBottom { get; set; }
 		public bool? Above { get; set; }
+		public int? Indent { get; set; }
+		public int? Outdent { get; set; }
 
 		public string AccessLevel { get; set; }
 		public string Format { get; set; }
