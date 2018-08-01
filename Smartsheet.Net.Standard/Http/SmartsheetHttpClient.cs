@@ -1101,5 +1101,18 @@ namespace Smartsheet.Net.Standard.Http
             return response.Result;
         }
         #endregion
+    
+        #region Cross Sheet Refs 
+
+        public async Task<IEnumerable<CrossSheetReference>> ListCrossSheetReferences(long? sheetId, string accessToken = null) {
+            if (sheetId == null) {
+                throw new Exception("Sheet ID cannot be null");
+            }
+
+            var response = await this.ExecuteRequest<IndexResultResponse<CrossSheetReference>, User>(HttpVerb.GET, string.Format("sheets/{0}/crosssheetreferences", sheetId), null, accessToken: accessToken);
+            return response.Data;
+        }
+
+        #endregion
     }
 }
