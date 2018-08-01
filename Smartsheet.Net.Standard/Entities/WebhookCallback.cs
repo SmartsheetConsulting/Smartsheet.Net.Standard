@@ -12,6 +12,7 @@ namespace Smartsheet.Net.Standard.Entities
 		//	Sent on initial verification (and every 100 requests)
 		public long? WebhookId { get; set; }
 		public string ChangeAgent { get; set; }
+		public string Challenge { get; set; }
 
 		//	Standard data included in callback
 		public string Nonce { get; set; }
