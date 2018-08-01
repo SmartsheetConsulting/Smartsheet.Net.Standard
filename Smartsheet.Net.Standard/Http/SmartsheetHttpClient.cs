@@ -1109,7 +1109,7 @@ namespace Smartsheet.Net.Standard.Http
                 throw new Exception("Sheet ID cannot be null");
             }
 
-            var response = await this.ExecuteRequest<IndexResultResponse<CrossSheetReference>, User>(HttpVerb.GET, string.Format("sheets/{0}/crosssheetreferences", sheetId.Value), null, accessToken: accessToken);
+            var response = await this.ExecuteRequest<IndexResultResponse<CrossSheetReference>, User>(HttpVerb.GET, string.Format("sheets/{0}/crosssheetreferences", sheetId), null, accessToken: accessToken);
             return response.Data;
         }
 
