@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Smartsheet.Net.Standard</PackageId>
-    <PackageVersion>2.0.10</PackageVersion>
-    <Authors>Austen DeWolf, Bobby Dick, Seth Martin</Authors>
+    <PackageVersion>2.0.11</PackageVersion>
+    <Authors>Austen DeWolf, Bobby Dick, Seth Martin, Misha Berman</Authors>
     <Description>Smartsheet C# SDK to facilitate HTTP Requests operations against the Smartsheet API (api.smartsheet.com)</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Add Indent/Outdent properties to Row class.</PackageReleaseNotes>
+    <PackageReleaseNotes>Bug fixes for cross sheet references and webhooks.</PackageReleaseNotes>
     <Copyright>Copyright 2018 (c)</Copyright>
     <PackageTags>smartsheet professional-services sdk</PackageTags>
   </PropertyGroup>
