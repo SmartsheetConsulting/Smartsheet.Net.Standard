@@ -26,7 +26,7 @@ namespace Smartsheet.Net.Standard.Interfaces
 		Task<ISmartsheetObject> GetWorkspaceById(long? workspaceId, string accessToken = null, bool loadAll = false);
 
 		//	Sheets
-		Task<Sheet> GetSheetById(long? sheetId, string accessToken = null);
+		Task<Sheet> GetSheetById(long? sheetId, string accessToken = null, string [] options = null);
 		Task<Sheet> CreateSheet(string sheetName, IEnumerable<Column> columns, string folderId = null, string workspaceId = null, string accessToken = null);
 		Task<Sheet> CreateSheetFromTemplate(string sheetName, long? templateId, long? folderId = null, long? workspaceId = null, string accessToken = null);
 		Task<Sheet> CopySheet(string newName, long? sourceSheetId, long? destinationId, DestinationType destinationType, IEnumerable<SheetCopyInclusion> includes, string accessToken = null);
@@ -59,9 +59,15 @@ namespace Smartsheet.Net.Standard.Interfaces
 
 		//	Columns
 		Task<Column> EditColumn(long? sheetId, long? columnId, Column model, string accessToken = null);
+		Task<Column> CreateColumn(long? sheetId, Column model, string accessToken = null);
 
 		//  Attachments
 		Task<Attachment> UploadAttachmentToRow(long? sheetId, long? rowId, string fileName, long length, Stream data, string contentType = null, string accessToken = null);
 		Task<Attachment> UploadAttachmentToRow(long? sheetId, long? rowId, IFormFile formFile, string accessToken = null);
+		
+		//  Cross sheet refs
+		Task<IEnumerable<CrossSheetReference>> ListCrossSheetReferences(long? sheetId, string accessToken = null);
+		Task<CrossSheetReference> CreateCrossSheetReference(long? sheetId, CrossSheetReference crossSheetReference, string accessToken = null);
+		
 	}
 }

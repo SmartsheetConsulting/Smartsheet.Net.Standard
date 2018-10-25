@@ -69,6 +69,8 @@ namespace Smartsheet.Net.Standard.Entities
         public string Formula { get; set; }
 
 		public bool? Strict { get; set; }
+		
+		public bool? OverrideValidation { get; set; }
 
 		public Hyperlink Hyperlink { get; set; }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Smartsheet.Net.Standard.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Smartsheet.Net.Standard.Responses;
 
 namespace Smartsheet.Net.Standard.Entities
@@ -73,6 +74,28 @@ namespace Smartsheet.Net.Standard.Entities
 		public IList<Column> Columns { get; set; }
 		public IList<Row> Rows { get { return this.MapCellsToColumns(); } set { this.UnformattedRows = value; } }
 		private IList<Row> UnformattedRows { get; set; }
+
+		private Dictionary<string, long> _ColumnDictionary;
+		[JsonIgnore]
+		public Dictionary<string, long> ColumnDictionary 
+		{
+			get 
+			{
+				if (_ColumnDictionary == null) 
+				{
+					var dic = new Dictionary<string, long>();
+            
+					foreach (var column in Columns)
+					{
+						dic.Add(column.Title, column.Id.Value);
+					}
+
+					_ColumnDictionary = dic;
+				}
+
+				return _ColumnDictionary;
+			}
+		}
 
 		//
 		//  Extension Methods
@@ -206,12 +229,12 @@ namespace Smartsheet.Net.Standard.Entities
 		}
 		 
 
-		public async Task<IEnumerable<Row>> UpdateRow(Row row, bool? strict = false, bool? toTop = null, bool? toBottom = null, bool? above = null, long? parentId = null, long? siblingId = null, string accessToken = null)
+		public async Task<IEnumerable<Row>> UpdateRow(Row row, bool? strict = false, bool? toTop = null, bool? toBottom = null, bool? above = null, long? parentId = null, long? siblingId = null, bool mapResult = true, string accessToken = null)
 		{
-			return await this.UpdateRows(new List<Row> { row }, strict, toTop, toBottom, above, parentId, siblingId, accessToken);
+			return await this.UpdateRows(new List<Row> { row }, strict, toTop, toBottom, above, parentId, siblingId, mapResult, accessToken);
 		}
 
-        public async Task<IEnumerable<Row>> UpdateRows(IList<Row> rows, bool? strict = false, bool? toTop = null, bool? toBottom = null, bool? above = null, long? parentId = null, long? siblingId = null, string accessToken = null)
+        public async Task<IEnumerable<Row>> UpdateRows(IList<Row> rows, bool? strict = false, bool? toTop = null, bool? toBottom = null, bool? above = null, long? parentId = null, long? siblingId = null, bool mapResult = true, string accessToken = null)
 		{
 			if (rows.Count() > 0)
 			{
@@ -246,21 +269,22 @@ namespace Smartsheet.Net.Standard.Entities
 
             var response = await this._Client.ExecuteRequest<ResultResponse<IEnumerable<Row>>, IEnumerable<Row>>(HttpVerb.PUT, string.Format("sheets/{0}/rows", this.Id), rows, accessToken: accessToken);
 
-            foreach (var updatedRow in response.Result)
-            {
-                var index = 0;
-                foreach (var row in this.Rows)
-                {
-                    if (row.Id == updatedRow.Id)
-                        break;
-                    index++;
-                }
-                this.Rows[index] = updatedRow;
-            }
+			if (mapResult) {
+				foreach (var updatedRow in response.Result) {
+					var index = 0;
+					foreach (var row in this.Rows) {
+						if (row.Id == updatedRow.Id)
+							break;
+						index++;
+					}
 
-            this.MapCellsToColumns();
+					this.Rows[index] = updatedRow;
+				}
 
-            return response.Result;
+				this.MapCellsToColumns();
+			}
+
+			return response.Result;
 		}
 
         public async Task<IEnumerable<long>> RemoveRows(IList<Row> rows, string accessToken = null)

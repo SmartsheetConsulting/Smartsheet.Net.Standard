@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using Smartsheet.Net.Standard.Interfaces;
 
 namespace Smartsheet.Net.Standard.Entities
@@ -93,20 +94,41 @@ namespace Smartsheet.Net.Standard.Entities
 
 		public IList<Discussion> Discussions { get; set; }
 		public IList<Attachment> Attatchments { get; set; }
+		
+		private Dictionary<string, Cell> _CellDictionary;
+		[JsonIgnore]
+		public Dictionary<string, Cell> CellDictionary {
+			get 
+			{
+				if (_CellDictionary == null)
+				{
+					var dic = new Dictionary<string, Cell>();
+					
+					foreach (var cell in Cells) 
+					{
+						dic.Add(cell.Column.Title, cell);
+					}
+
+					_CellDictionary = dic;
+				}
+
+				return _CellDictionary;
+			}
+		}
 
 		//
 		//  Extension Methods
 		#region Extensions
 		public Cell GetCellForColumn(long columnId)
 		{
-			var cell = this.Cells.Where(c => c.Column.Id == columnId).FirstOrDefault();
+			var cell = this.Cells.FirstOrDefault(c => c.Column.Id == columnId);
 
 			return cell;
 		}
 
 		public Cell GetCellForColumn(string columnTitle)
 		{
-			var cell = this.Cells.Where(c => c.Column.Title.Trim().ToLower() == columnTitle.ToLower()).FirstOrDefault();
+			var cell = this.Cells.FirstOrDefault(c => c.Column.Title.Trim().ToLower() == columnTitle.ToLower());
 
 			return cell;
 		}
@@ -119,10 +141,16 @@ namespace Smartsheet.Net.Standard.Entities
 
 		public void UpdateCellForColumn(string columnTitle, dynamic value)
 		{
-			var cell = this.Cells.Where(c => c.Column.Title.Trim().ToLower() == columnTitle.ToLower()).FirstOrDefault();
+			var cell = this.Cells.FirstOrDefault(c => c.Column.Title.Trim().ToLower() == columnTitle.ToLower());
 
 			cell.Value = value;
 		}
+		
+		public string GetStringValueFromCellDictionary(string columnTitle) {
+			CellDictionary.TryGetValue(columnTitle, out var cell);
+			return Convert.ToString(cell?.Value ?? "");
+		}
+
 		#endregion
 	}
 }
