@@ -269,10 +269,13 @@ namespace Smartsheet.Net.Standard.Entities
 
 			var response = await this._Client.ExecuteRequest<ResultResponse<IEnumerable<Row>>, IEnumerable<Row>>(HttpVerb.PUT, string.Format("sheets/{0}/rows", this.Id), rows, accessToken: accessToken);
 
-			if (mapResult) {
-				foreach (var updatedRow in response.Result) {
+			if (mapResult) 
+			{
+				foreach (var updatedRow in response.Result)
+				{
 					var index = 0;
-					foreach (var row in this.Rows) {
+					foreach (var row in this.Rows) 
+					{
 						if (row.Id == updatedRow.Id)
 							break;
 						index++;

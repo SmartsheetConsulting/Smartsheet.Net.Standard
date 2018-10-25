@@ -553,20 +553,18 @@ namespace Smartsheet.Net.Standard.Http
             return response.Result;
         }
 
-        public async Task<Sheet> GetSheetById(long? sheetId, string accessToken = null, string[] options = null) {
-            if (sheetId == null) {
+        public async Task<Sheet> GetSheetById(long? sheetId, string accessToken = null, string[] options = null) 
+        {
+            if (sheetId == null) 
+            {
                 throw new Exception("Sheet ID cannot be null");
             }
 
             string optionsString = String.Empty;
 
-            if(options != null && options.Any()){
-                optionsString = $"?{String.Join("&", options)}";
-            }
-
-            if (sheetId == null)
+            if(options != null && options.Any())
             {
-                throw new Exception("Sheet ID cannot be null");
+                optionsString = $"?{String.Join("&", options)}";
             }
 
             var response = await this.ExecuteRequest<Sheet, Sheet>(HttpVerb.GET, string.Format("sheets/{0}{1}", sheetId, optionsString), null, accessToken: accessToken);
@@ -596,7 +594,8 @@ namespace Smartsheet.Net.Standard.Http
             return response.Data;
         }
 
-        public async Task<IEnumerable<Sheet>> ListAllSheetsAndVersions(string accessToken = null) {
+        public async Task<IEnumerable<Sheet>> ListAllSheetsAndVersions(string accessToken = null) 
+        {
             var response = await this.ExecuteRequest<IndexResultResponse<Sheet>, Sheet>(HttpVerb.GET, "sheets?include=sheetVersion&includeAll=true", null, accessToken: accessToken);
             return response.Data;
         }
@@ -929,13 +928,15 @@ namespace Smartsheet.Net.Standard.Http
             return result.Result;
         }
 
-        public async Task<Column> CreateColumn(long? sheetId, Column model, string accessToken = null) {
+        public async Task<Column> CreateColumn(long? sheetId, Column model, string accessToken = null) 
+        {
             var result = await this.ExecuteRequest<ResultResponse<Column>, Column>(HttpVerb.POST, string.Format("sheets/{0}/columns/", sheetId), model, accessToken: accessToken);
 
             return result.Result;
         }
 
-        public async Task<Column> DeleteColumn(long? sheetId, long? columnId, string accessToken = null) {
+        public async Task<Column> DeleteColumn(long? sheetId, long? columnId, string accessToken = null) 
+        {
             var result = await this.ExecuteRequest<ResultResponse<Column>, Column>(HttpVerb.DELETE, string.Format("sheets/{0}/columns/{1}", sheetId, columnId), null, accessToken: accessToken);
 
             return result.Result;
@@ -1022,7 +1023,7 @@ namespace Smartsheet.Net.Standard.Http
         {
             this._HttpClient.DefaultRequestHeaders.Add("sendEmail", "false");
 
-            var response = await this.ExecuteRequest<ResultResponse<User>, User>(HttpVerb.POST, string.Format("users?allowInviteUnlicensedTrialUser=true"), data: user, accessToken: accessToken);
+            var response = await this.ExecuteRequest<ResultResponse<User>, User>(HttpVerb.POST, string.Format("users"), data: user, accessToken: accessToken);
 
             return response.Result;
         }
