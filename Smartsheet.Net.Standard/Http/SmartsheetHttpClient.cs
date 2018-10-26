@@ -37,6 +37,7 @@ namespace Smartsheet.Net.Standard.Http
         #region Client 
         public SmartsheetHttpClient()
         {
+            this.InitializeHttpClient();
         }
 
         public SmartsheetHttpClient(IOptions<ApplicationSettings> options)

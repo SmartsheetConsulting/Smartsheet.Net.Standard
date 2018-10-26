@@ -75,25 +75,17 @@ namespace Smartsheet.Net.Standard.Entities
 		public IList<Row> Rows { get { return this.MapCellsToColumns(); } set { this.UnformattedRows = value; } }
 		private IList<Row> UnformattedRows { get; set; }
 
-		private Dictionary<string, long> _ColumnDictionary;
 		[JsonIgnore]
-		public Dictionary<string, long> ColumnDictionary 
+		[JsonProperty(Required = Required.Default)]
+		public Dictionary<string, long> ColumnDictionary { get; set; }
+
+		public void InitColumnDictionary() 
 		{
-			get 
+			ColumnDictionary = new Dictionary<string, long>();
+					
+			foreach (var column in Columns)
 			{
-				if (_ColumnDictionary == null) 
-				{
-					var dic = new Dictionary<string, long>();
-			
-					foreach (var column in Columns)
-					{
-						dic.Add(column.Title, column.Id.Value);
-					}
-
-					_ColumnDictionary = dic;
-				}
-
-				return _ColumnDictionary;
+				ColumnDictionary.Add(column.Title, column.Id.Value);
 			}
 		}
 

@@ -95,24 +95,17 @@ namespace Smartsheet.Net.Standard.Entities
 		public IList<Discussion> Discussions { get; set; }
 		public IList<Attachment> Attatchments { get; set; }
 		
-		private Dictionary<string, Cell> _CellDictionary;
 		[JsonIgnore]
-		public Dictionary<string, Cell> CellDictionary {
-			get 
-			{
-				if (_CellDictionary == null)
-				{
-					var dic = new Dictionary<string, Cell>();
+		[JsonProperty(Required = Required.Default)]
+		public Dictionary<string, Cell> CellDictionary { get; set; }
+
+		public void InitCellDictionary() 
+		{
+			CellDictionary = new Dictionary<string, Cell>();
 					
-					foreach (var cell in Cells) 
-					{
-						dic.Add(cell.Column.Title, cell);
-					}
-
-					_CellDictionary = dic;
-				}
-
-				return _CellDictionary;
+			foreach (var cell in Cells) 
+			{
+				CellDictionary.Add(cell.Column.Title, cell);
 			}
 		}
 
@@ -146,11 +139,6 @@ namespace Smartsheet.Net.Standard.Entities
 			cell.Value = value;
 		}
 		
-		public string GetStringValueFromCellDictionary(string columnTitle) {
-			CellDictionary.TryGetValue(columnTitle, out var cell);
-			return Convert.ToString(cell?.Value ?? "");
-		}
-
 		#endregion
 	}
 }
