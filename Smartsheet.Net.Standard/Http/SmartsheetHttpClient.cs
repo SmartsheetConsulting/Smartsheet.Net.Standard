@@ -449,6 +449,7 @@ namespace Smartsheet.Net.Standard.Http
 
 
         #region Sheets
+        
         public async Task<Sheet> CreateSheet(string sheetName, IEnumerable<Column> columns, string folderId = null, string workspaceId = null, string accessToken = null)
         {
             if (string.IsNullOrWhiteSpace(sheetName))
@@ -944,6 +945,7 @@ namespace Smartsheet.Net.Standard.Http
         }
 
         #endregion
+        
 
         #region Attachments
         public async Task<Attachment> UploadAttachmentToRow(long? sheetId, long? rowId, string fileName, long length, Stream stream, string contentType = null, string accessToken = null)
@@ -989,7 +991,7 @@ namespace Smartsheet.Net.Standard.Http
         }
 
         #endregion
-
+        
 
         #region Users
         public async Task<User> GetCurrentUser(string accessToken = null)
@@ -1065,8 +1067,8 @@ namespace Smartsheet.Net.Standard.Http
             return response.Result;
         }
 
-
         #endregion
+        
 
         #region Groups
         public async Task<IEnumerable<Group>> ListOrgGroups(string accessToken = null, bool includeAll = false)
@@ -1133,6 +1135,7 @@ namespace Smartsheet.Net.Standard.Http
             return response.Result;
         }
         #endregion
+        
     
         #region Cross Sheet Refs 
 
