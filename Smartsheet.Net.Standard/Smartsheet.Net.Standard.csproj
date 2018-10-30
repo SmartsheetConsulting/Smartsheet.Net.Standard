@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Smartsheet.Net.Standard</PackageId>
-    <PackageVersion>2.0.11</PackageVersion>
-    <Authors>Austen DeWolf, Bobby Dick, Seth Martin, Misha Berman</Authors>
+    <PackageVersion>2.0.12</PackageVersion>
+    <Authors>Austen DeWolf, Bobby Dick, Misha Berman, Seth Martin</Authors>
     <Description>Smartsheet C# SDK to facilitate HTTP Requests operations against the Smartsheet API (api.smartsheet.com)</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Bug fixes for cross sheet references and webhooks.</PackageReleaseNotes>
+    <PackageReleaseNotes>Add CreateColumn(), DeleteColumn(), CreateCrossSheetReferences(), and both a Row.CellDictionary and Sheet.ColumnDictionary for convenience.</PackageReleaseNotes>
     <Copyright>Copyright 2018 (c)</Copyright>
     <PackageTags>smartsheet professional-services sdk</PackageTags>
   </PropertyGroup>
