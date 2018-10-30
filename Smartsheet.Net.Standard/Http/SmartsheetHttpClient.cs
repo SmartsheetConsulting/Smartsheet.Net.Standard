@@ -35,6 +35,11 @@ namespace Smartsheet.Net.Standard.Http
         private bool _RetryRequest = true;
 
         #region Client 
+        public SmartsheetHttpClient()
+        {
+            this.InitializeHttpClient();
+        }
+
         public SmartsheetHttpClient(IOptions<ApplicationSettings> options)
         {
             this._AccessToken = options.Value.SmartsheetCredentials.AccessToken;
@@ -444,6 +449,7 @@ namespace Smartsheet.Net.Standard.Http
 
 
         #region Sheets
+        
         public async Task<Sheet> CreateSheet(string sheetName, IEnumerable<Column> columns, string folderId = null, string workspaceId = null, string accessToken = null)
         {
             if (string.IsNullOrWhiteSpace(sheetName))
@@ -549,14 +555,21 @@ namespace Smartsheet.Net.Standard.Http
             return response.Result;
         }
 
-        public async Task<Sheet> GetSheetById(long? sheetId, string accessToken = null)
+        public async Task<Sheet> GetSheetById(long? sheetId, string accessToken = null, string[] options = null) 
         {
-            if (sheetId == null)
+            if (sheetId == null) 
             {
                 throw new Exception("Sheet ID cannot be null");
             }
 
-            var response = await this.ExecuteRequest<Sheet, Sheet>(HttpVerb.GET, string.Format("sheets/{0}", sheetId), null, accessToken: accessToken);
+            string optionsString = String.Empty;
+
+            if(options != null && options.Any())
+            {
+                optionsString = $"?{String.Join("&", options)}";
+            }
+
+            var response = await this.ExecuteRequest<Sheet, Sheet>(HttpVerb.GET, string.Format("sheets/{0}{1}", sheetId, optionsString), null, accessToken: accessToken);
 
             response._Client = this;
 
@@ -580,6 +593,12 @@ namespace Smartsheet.Net.Standard.Http
         public async Task<IEnumerable<Sheet>> ListSheets(string accessToken = null)
         {
             var response = await this.ExecuteRequest<IndexResultResponse<Sheet>, Sheet>(HttpVerb.GET, string.Format("sheets"), null, accessToken: accessToken);
+            return response.Data;
+        }
+
+        public async Task<IEnumerable<Sheet>> ListAllSheetsAndVersions(string accessToken = null) 
+        {
+            var response = await this.ExecuteRequest<IndexResultResponse<Sheet>, Sheet>(HttpVerb.GET, "sheets?include=sheetVersion&includeAll=true", null, accessToken: accessToken);
             return response.Data;
         }
 
@@ -911,7 +930,22 @@ namespace Smartsheet.Net.Standard.Http
             return result.Result;
         }
 
+        public async Task<Column> CreateColumn(long? sheetId, Column model, string accessToken = null) 
+        {
+            var result = await this.ExecuteRequest<ResultResponse<Column>, Column>(HttpVerb.POST, string.Format("sheets/{0}/columns/", sheetId), model, accessToken: accessToken);
+
+            return result.Result;
+        }
+
+        public async Task<Column> DeleteColumn(long? sheetId, long? columnId, string accessToken = null) 
+        {
+            var result = await this.ExecuteRequest<ResultResponse<Column>, Column>(HttpVerb.DELETE, string.Format("sheets/{0}/columns/{1}", sheetId, columnId), null, accessToken: accessToken);
+
+            return result.Result;
+        }
+
         #endregion
+        
 
         #region Attachments
         public async Task<Attachment> UploadAttachmentToRow(long? sheetId, long? rowId, string fileName, long length, Stream stream, string contentType = null, string accessToken = null)
@@ -957,7 +991,7 @@ namespace Smartsheet.Net.Standard.Http
         }
 
         #endregion
-
+        
 
         #region Users
         public async Task<User> GetCurrentUser(string accessToken = null)
@@ -1033,8 +1067,8 @@ namespace Smartsheet.Net.Standard.Http
             return response.Result;
         }
 
-
         #endregion
+        
 
         #region Groups
         public async Task<IEnumerable<Group>> ListOrgGroups(string accessToken = null, bool includeAll = false)
@@ -1089,10 +1123,10 @@ namespace Smartsheet.Net.Standard.Http
             return response.Result;
         }
 
-        public async Task<GroupMember> AddGroupMembers(long groupId, List<GroupMember> newMembers = null, string accessToken = null)
+        public async Task<IEnumerable<GroupMember>> AddGroupMembers(long groupId, List<GroupMember> newMembers = null, string accessToken = null)
         {
-            var response = await this.ExecuteRequest<ResultResponse<GroupMember>, List<GroupMember>>(HttpVerb.POST, string.Format("groups/{0}/members", groupId), newMembers, accessToken: accessToken);
-            return response.Result;
+            var response = await this.ExecuteRequest<IndexResultResponse<GroupMember>, List<GroupMember>>(HttpVerb.POST, string.Format("groups/{0}/members", groupId), newMembers, accessToken: accessToken);
+            return response.Data;
         }
 
         public async Task<GroupMember> RemoveGroupMember(long groupId, long userId, string accessToken = null)
@@ -1101,6 +1135,7 @@ namespace Smartsheet.Net.Standard.Http
             return response.Result;
         }
         #endregion
+        
     
         #region Cross Sheet Refs 
 
@@ -1111,6 +1146,17 @@ namespace Smartsheet.Net.Standard.Http
 
             var response = await this.ExecuteRequest<IndexResultResponse<CrossSheetReference>, User>(HttpVerb.GET, string.Format("sheets/{0}/crosssheetreferences", sheetId), null, accessToken: accessToken);
             return response.Data;
+        }
+
+        public async Task<CrossSheetReference> CreateCrossSheetReference(long? sheetId, CrossSheetReference crossSheetReference, string accessToken = null)
+        {
+            if (sheetId == null) 
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+
+            var response = await this.ExecuteRequest<ResultResponse<CrossSheetReference>, CrossSheetReference>(HttpVerb.POST, $"sheets/{sheetId}/crosssheetreferences", crossSheetReference, accessToken: accessToken);
+            return response.Result;
         }
 
         #endregion

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Smartsheet.Net.Standard.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Smartsheet.Net.Standard.Responses;
 
 namespace Smartsheet.Net.Standard.Entities
@@ -74,6 +75,20 @@ namespace Smartsheet.Net.Standard.Entities
 		public IList<Row> Rows { get { return this.MapCellsToColumns(); } set { this.UnformattedRows = value; } }
 		private IList<Row> UnformattedRows { get; set; }
 
+		[JsonIgnore]
+		[JsonProperty(Required = Required.Default)]
+		public Dictionary<string, long> ColumnDictionary { get; set; }
+
+		public void InitColumnDictionary() 
+		{
+			ColumnDictionary = new Dictionary<string, long>();
+					
+			foreach (var column in Columns)
+			{
+				ColumnDictionary.Add(column.Title, column.Id.Value);
+			}
+		}
+
 		//
 		//  Extension Methods
 		#region Extensions
@@ -85,17 +100,17 @@ namespace Smartsheet.Net.Standard.Entities
 				{
 					var parsedColumns = this.Columns.ToList();
 					var parsedCells = row.Cells.ToList();
-                    var parsedCellCount = parsedCells.Count;
+					var parsedCellCount = parsedCells.Count;
 
 					for (var i = 0; i < parsedColumns.Count; i++)
 					{
-                        if (i < parsedCellCount)
-                        {
-                            var cell = parsedCells[i];
+						if (i < parsedCellCount)
+						{
+							var cell = parsedCells[i];
 
-                            cell.ColumnId = parsedColumns[i].Id;
-                            cell.Column = parsedColumns[i];
-                        }
+							cell.ColumnId = parsedColumns[i].Id;
+							cell.Column = parsedColumns[i];
+						}
 					}
 				}
 			}
@@ -126,13 +141,13 @@ namespace Smartsheet.Net.Standard.Entities
 			return column;
 		}
 
-	    public Cell GetCellByKeyValueLookup(string key, string keyColumnTitle, string valueColumnTitle, bool caseSensitive = true)
-	    {
-            if (!caseSensitive)
-                key = key?.Trim().ToLower();
+		public Cell GetCellByKeyValueLookup(string key, string keyColumnTitle, string valueColumnTitle, bool caseSensitive = true)
+		{
+			if (!caseSensitive)
+				key = key?.Trim().ToLower();
 
-	        return this.Rows.FirstOrDefault(r => r.GetValueForColumnAsString(keyColumnTitle) == key)?.GetCellForColumn(valueColumnTitle);
-	    }
+			return this.Rows.FirstOrDefault(r => r.GetValueForColumnAsString(keyColumnTitle) == key)?.GetCellForColumn(valueColumnTitle);
+		}
 
 		#endregion
 
@@ -153,7 +168,7 @@ namespace Smartsheet.Net.Standard.Entities
 					{
 						rows[i].Cells[x].Build(strict);
 
-                        if ((rows[i].Cells[x].Value == null && String.IsNullOrWhiteSpace(rows[i].Cells[x].Formula)) || systemColumns.Contains(rows[i].Cells[x].ColumnId))
+						if ((rows[i].Cells[x].Value == null && String.IsNullOrWhiteSpace(rows[i].Cells[x].Formula)) || systemColumns.Contains(rows[i].Cells[x].ColumnId))
 						{
 							removeCells.Add(rows[i].Cells[x]);
 						}
@@ -172,17 +187,17 @@ namespace Smartsheet.Net.Standard.Entities
 				}
 			}
 
-            var response = await this._Client.ExecuteRequest<ResultResponse<IEnumerable<Row>>, IEnumerable<Row>>(HttpVerb.POST, string.Format("sheets/{0}/rows", this.Id), rows, accessToken: accessToken);
+			var response = await this._Client.ExecuteRequest<ResultResponse<IEnumerable<Row>>, IEnumerable<Row>>(HttpVerb.POST, string.Format("sheets/{0}/rows", this.Id), rows, accessToken: accessToken);
 
-            foreach (var row in response.Result)
-            {
-                this.Rows.Add(row);
-            }
+			foreach (var row in response.Result)
+			{
+				this.Rows.Add(row);
+			}
 
-            this.MapCellsToColumns();
+			this.MapCellsToColumns();
 
-            return response.Result;
-        }
+			return response.Result;
+		}
 
 		public async Task<IEnumerable<Row>> UpdateCellValue(long? rowId, long? columnId, dynamic value, bool? strict = false, string accessToken = null)
 		{
@@ -206,12 +221,12 @@ namespace Smartsheet.Net.Standard.Entities
 		}
 		 
 
-		public async Task<IEnumerable<Row>> UpdateRow(Row row, bool? strict = false, bool? toTop = null, bool? toBottom = null, bool? above = null, long? parentId = null, long? siblingId = null, string accessToken = null)
+		public async Task<IEnumerable<Row>> UpdateRow(Row row, bool? strict = false, bool? toTop = null, bool? toBottom = null, bool? above = null, long? parentId = null, long? siblingId = null, bool mapResult = true, string accessToken = null)
 		{
-			return await this.UpdateRows(new List<Row> { row }, strict, toTop, toBottom, above, parentId, siblingId, accessToken);
+			return await this.UpdateRows(new List<Row> { row }, strict, toTop, toBottom, above, parentId, siblingId, mapResult, accessToken);
 		}
 
-        public async Task<IEnumerable<Row>> UpdateRows(IList<Row> rows, bool? strict = false, bool? toTop = null, bool? toBottom = null, bool? above = null, long? parentId = null, long? siblingId = null, string accessToken = null)
+		public async Task<IEnumerable<Row>> UpdateRows(IList<Row> rows, bool? strict = false, bool? toTop = null, bool? toBottom = null, bool? above = null, long? parentId = null, long? siblingId = null, bool mapResult = true, string accessToken = null)
 		{
 			if (rows.Count() > 0)
 			{
@@ -225,7 +240,7 @@ namespace Smartsheet.Net.Standard.Entities
 					{
 						rows[i].Cells[x].Build(strict);
 
-                        if ((rows[i].Cells[x].Value == null && String.IsNullOrWhiteSpace(rows[i].Cells[x].Formula) && rows[i].Cells[x].LinkInFromCell == null) || systemColumns.Contains(rows[i].Cells[x].ColumnId))
+						if ((rows[i].Cells[x].Value == null && String.IsNullOrWhiteSpace(rows[i].Cells[x].Formula) && rows[i].Cells[x].LinkInFromCell == null) || systemColumns.Contains(rows[i].Cells[x].ColumnId))
 						{
 							removeCells.Add(rows[i].Cells[x]);
 						}
@@ -244,26 +259,30 @@ namespace Smartsheet.Net.Standard.Entities
 				}
 			}
 
-            var response = await this._Client.ExecuteRequest<ResultResponse<IEnumerable<Row>>, IEnumerable<Row>>(HttpVerb.PUT, string.Format("sheets/{0}/rows", this.Id), rows, accessToken: accessToken);
+			var response = await this._Client.ExecuteRequest<ResultResponse<IEnumerable<Row>>, IEnumerable<Row>>(HttpVerb.PUT, string.Format("sheets/{0}/rows", this.Id), rows, accessToken: accessToken);
 
-            foreach (var updatedRow in response.Result)
-            {
-                var index = 0;
-                foreach (var row in this.Rows)
-                {
-                    if (row.Id == updatedRow.Id)
-                        break;
-                    index++;
-                }
-                this.Rows[index] = updatedRow;
-            }
+			if (mapResult) 
+			{
+				foreach (var updatedRow in response.Result)
+				{
+					var index = 0;
+					foreach (var row in this.Rows) 
+					{
+						if (row.Id == updatedRow.Id)
+							break;
+						index++;
+					}
 
-            this.MapCellsToColumns();
+					this.Rows[index] = updatedRow;
+				}
 
-            return response.Result;
+				this.MapCellsToColumns();
+			}
+
+			return response.Result;
 		}
 
-        public async Task<IEnumerable<long>> RemoveRows(IList<Row> rows, string accessToken = null)
+		public async Task<IEnumerable<long>> RemoveRows(IList<Row> rows, string accessToken = null)
 		{
 			var rowList = rows.ToList();
 
@@ -275,7 +294,7 @@ namespace Smartsheet.Net.Standard.Entities
 
 				var url = string.Format("sheets/{0}/rows?ids={1}&ignoreRowsNotFound=true", this.Id, rowIdList);
 
-                response = await this._Client.ExecuteRequest<ResultResponse<IEnumerable<long>>, IEnumerable<Row>>(HttpVerb.DELETE, string.Format("sheets/{0}/rows?ids={1}&ignoreRowsNotFound=true", this.Id, rowIdList), null, accessToken: accessToken);
+				response = await this._Client.ExecuteRequest<ResultResponse<IEnumerable<long>>, IEnumerable<Row>>(HttpVerb.DELETE, string.Format("sheets/{0}/rows?ids={1}&ignoreRowsNotFound=true", this.Id, rowIdList), null, accessToken: accessToken);
 
 				if (response.Message.Equals("SUCCESS"))
 				{
@@ -286,13 +305,13 @@ namespace Smartsheet.Net.Standard.Entities
 			return response.Result;
 		}
 
-        public async Task Refresh() 
-        {
-            var updateSheet = await this._Client.GetSheetById(this.Id);
+		public async Task Refresh() 
+		{
+			var updateSheet = await this._Client.GetSheetById(this.Id);
 
-            this.Rows = updateSheet.Rows;
-            this.Columns = updateSheet.Columns;
-        }
+			this.Rows = updateSheet.Rows;
+			this.Columns = updateSheet.Columns;
+		}
 
 		#endregion
 	}
