@@ -69,6 +69,7 @@ namespace Smartsheet.Net.Standard.Interfaces
 		Task<Webhook> GetWebhook(long? webhookId, string accessToken = null);
 		Task<Webhook> CreateWebhook(Webhook model, string accessToken = null);
 		Task<Webhook> UpdateWebhook(long? webhookId, Webhook model, string accessToken = null);
+		Task<Webhook> DeleteWebhook(long? webhookId, string accessToken = null);
 
 		//	Columns
 		Task<Column> EditColumn(long? sheetId, long? columnId, Column model, string accessToken = null);

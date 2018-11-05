@@ -913,6 +913,13 @@ namespace Smartsheet.Net.Standard.Http
 
             return result.Result;
         }
+        
+        public async Task<Webhook> DeleteWebhook(long? webhookId, string accessToken = null)
+        {
+            var result = await this.ExecuteRequest<ResultResponse<Webhook>, Webhook>(HttpVerb.DELETE, string.Format("webhooks/{0}", webhookId), null, accessToken: accessToken);
+
+            return result.Result;
+        }
 
         #endregion
 
