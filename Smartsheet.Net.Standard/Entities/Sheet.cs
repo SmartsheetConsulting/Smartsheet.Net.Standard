@@ -42,6 +42,8 @@ namespace Smartsheet.Net.Standard.Entities
 			this.EffectiveAttachmentOptions = new List<string>();
 			this.Columns = new List<Column>();
 			this.Rows = new List<Row>();
+			this.Attachments = new List<Attachment>();
+			this.CrossSheetReferences = new List<CrossSheetReference>();
 		}
 
 		public long? Id { get; set; }
@@ -70,6 +72,8 @@ namespace Smartsheet.Net.Standard.Entities
 		public UserSettings UserSettings { get; set; }
 		public Workspace Workspace { get; set; }
 
+		public IList<Attachment> Attachments { get; set; }
+		public IList<CrossSheetReference> CrossSheetReferences { get; set; }
 		public IList<string> EffectiveAttachmentOptions { get; set; }
 		public IList<Column> Columns { get; set; }
 		public IList<Row> Rows { get { return this.MapCellsToColumns(); } set { this.UnformattedRows = value; } }

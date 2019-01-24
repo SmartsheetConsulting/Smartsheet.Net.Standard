@@ -79,6 +79,7 @@ namespace Smartsheet.Net.Standard.Interfaces
 		//  Attachments
 		Task<Attachment> UploadAttachmentToRow(long? sheetId, long? rowId, string fileName, long length, Stream data, string contentType = null, string accessToken = null);
 		Task<Attachment> UploadAttachmentToRow(long? sheetId, long? rowId, IFormFile formFile, string accessToken = null);
+		Task<IEnumerable<Attachment>> ListAttachments(long? sheetId, string accessToken = null);
 		
 		//  Cross sheet refs
 		Task<IEnumerable<CrossSheetReference>> ListCrossSheetReferences(long? sheetId, string accessToken = null);

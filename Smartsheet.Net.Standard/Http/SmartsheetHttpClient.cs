@@ -997,6 +997,17 @@ namespace Smartsheet.Net.Standard.Http
 
         }
 
+        public async Task<IEnumerable<Attachment>> ListAttachments(long? sheetId, string accessToken = null)
+        {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+            
+            var response = await this.ExecuteRequest<IndexResultResponse<Attachment>, Attachment>(HttpVerb.GET, string.Format("sheets/{0}/attachments", sheetId), null, accessToken: accessToken);
+            return response.Data;
+        }
+
         #endregion
         
 

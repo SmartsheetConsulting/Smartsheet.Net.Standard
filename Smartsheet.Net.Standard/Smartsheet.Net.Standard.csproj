@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Smartsheet.Net.Standard</PackageId>
-    <PackageVersion>2.0.14</PackageVersion>
+    <PackageVersion>2.0.15</PackageVersion>
     <Authors>Austen DeWolf, Bobby Dick, Misha Berman, Seth Martin</Authors>
     <Description>Smartsheet C# SDK to facilitate HTTP Requests operations against the Smartsheet API (api.smartsheet.com)</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Minor bug fixes.</PackageReleaseNotes>
+    <PackageReleaseNotes>Add Sheet properties for Attachments and CrossSheetReferences, and a method for getting sheet attachments.</PackageReleaseNotes>
     <Copyright>Copyright 2018 (c)</Copyright>
     <PackageTags>smartsheet professional-services sdk</PackageTags>
   </PropertyGroup>
