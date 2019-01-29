@@ -21,6 +21,7 @@ using System.IO;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json.Linq;
 
 namespace Smartsheet.Net.Standard.Http
 {
@@ -955,12 +956,58 @@ namespace Smartsheet.Net.Standard.Http
         
 
         #region Attachments
+        [Obsolete("UploadAttachmentToRow is deprecated. Use AttachFileToRow.")]
         public async Task<Attachment> UploadAttachmentToRow(long? sheetId, long? rowId, string fileName, long length, Stream stream, string contentType = null, string accessToken = null)
+        {
+            return await AttachFileToRow(sheetId, rowId, fileName, length, stream, contentType, accessToken);
+        }
+
+        [Obsolete("UploadAttachmentToRow is deprecated. Use AttachFileToRow.")]
+        public async Task<Attachment> UploadAttachmentToRow(long? sheetId, long? rowId, IFormFile formFile, string accessToken = null)
+        {
+            return await AttachFileToRow(sheetId, rowId, formFile, accessToken);
+        }
+
+        public async Task<Attachment> AttachFileToRow(long? sheetId, long? rowId, string fileName, long length,
+            Stream stream, string contentType = null, string accessToken = null)
+        {
+            var url = $"https://api.smartsheet.com/2.0/sheets/{sheetId}/rows/{rowId}/attachments";
+
+            return await UploadFileAttachment(url, fileName, length, stream, contentType, accessToken);
+        }
+        
+        public async Task<Attachment> AttachFileToRow(long? sheetId, long? rowId, IFormFile formFile, string accessToken = null)
+        {
+            using (var stream = formFile.OpenReadStream())
+            {
+                var response = await this.AttachFileToRow(sheetId, rowId, formFile.FileName, formFile.Length, stream, formFile.ContentType, accessToken);
+                return response;
+            }
+
+        }
+        
+        public async Task<Attachment> AttachFileToSheet(long? sheetId, string fileName, long length, Stream stream, string contentType = null, string accessToken = null)
+        {
+            var url = $"https://api.smartsheet.com/2.0/sheets/{sheetId}/attachments";
+
+            return await UploadFileAttachment(url, fileName, length, stream, contentType, accessToken);
+        }
+
+        public async Task<Attachment> AttachFileToSheet(long? sheetId, IFormFile formFile, string accessToken = null)
+        {
+            using (var stream = formFile.OpenReadStream())
+            {
+                var response = await this.AttachFileToSheet(sheetId, formFile.FileName, formFile.Length, stream, formFile.ContentType, accessToken);
+                return response;
+            }
+
+        }
+        
+        private async Task<Attachment> UploadFileAttachment(string requestUrl, string fileName, long length, Stream stream,
+            string contentType = null, string accessToken = null)
         {
             this._HttpClient.DefaultRequestHeaders.Remove("Authorization");
             this.SetAuthorizationHeader(accessToken);
-
-            var url = string.Format("https://api.smartsheet.com/2.0/sheets/{0}/rows/{1}/attachments", sheetId, rowId);
 
             byte[] data;
             using (var br = new BinaryReader(stream))
@@ -968,7 +1015,7 @@ namespace Smartsheet.Net.Standard.Http
                 data = br.ReadBytes((int)stream.Length);
             }
 
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, url);
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, requestUrl);
             request.Content = new ByteArrayContent(data);
             request.Content.Headers.ContentLength = length;
             request.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
@@ -983,18 +1030,77 @@ namespace Smartsheet.Net.Standard.Http
             var response = await this._HttpClient.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
             var jsonResponseBody = JsonConvert.DeserializeObject(responseBody).ToString();
-            var resultResponse = JsonConvert.DeserializeObject<Attachment>(jsonResponseBody);
-            return resultResponse;
+            var resultResponse = JsonConvert.DeserializeObject<ResultResponse<Attachment>>(jsonResponseBody);
+            return resultResponse.Result;
         }
 
-        public async Task<Attachment> UploadAttachmentToRow(long? sheetId, long? rowId, IFormFile formFile, string accessToken = null)
+        public async Task<Attachment> AttachUrlToRow(long? sheetId, long? rowId, string url, string name, string description, string attachmentType, string attachmentSubType, string accessToken = null)
         {
-            using (var stream = formFile.OpenReadStream())
+            var attachment = new Attachment
             {
-                var response = await this.UploadAttachmentToRow(sheetId, rowId, formFile.FileName, formFile.Length, stream, formFile.ContentType, accessToken);
-                return response;
-            }
+                Url = url,
+                Name = name,
+                Description = description,
+                AttachmentType = attachmentType,
+                AttachmentSubType = attachmentSubType
+            };
 
+            return await AttachUrlToRow(sheetId, rowId, attachment, accessToken);
+        }
+
+        public async Task<Attachment> AttachUrlToRow(long? sheetId, long? rowId, Attachment attachment, string accessToken = null)
+        {
+            var requestUrl = $"https://api.smartsheet.com/2.0/sheets/{sheetId}/rows/{rowId}/attachments";
+            
+            var attachmentCopy = new Attachment
+            {
+                AttachmentSubType = attachment.AttachmentSubType,
+                AttachmentType = attachment.AttachmentType,
+                Description = attachment.Description,
+                Name = attachment.Name,
+                Url = attachment.Url
+            };
+
+            return await UploadUrlAttachment(requestUrl, attachmentCopy, accessToken);
+        }
+        
+        public async Task<Attachment> AttachUrlToSheet(long? sheetId, string url, string name, string description, string attachmentType, string attachmentSubType, string accessToken = null)
+        {
+            var attachment = new Attachment
+            {
+                Url = url,
+                Name = name,
+                Description = description,
+                AttachmentType = attachmentType,
+                AttachmentSubType = attachmentSubType
+            };
+
+            return await AttachUrlToSheet(sheetId, attachment, accessToken);
+        }
+        
+        public async Task<Attachment> AttachUrlToSheet(long? sheetId, Attachment attachment, string accessToken = null)
+        {
+            var requestUrl = $"https://api.smartsheet.com/2.0/sheets/{sheetId}/attachments";
+            
+            var attachmentCopy = new Attachment
+            {
+                AttachmentSubType = attachment.AttachmentSubType,
+                AttachmentType = attachment.AttachmentType,
+                Description = attachment.Description,
+                Name = attachment.Name,
+                Url = attachment.Url
+            };
+
+            return await UploadUrlAttachment(requestUrl, attachmentCopy, accessToken);
+        }
+        
+        private async Task<Attachment> UploadUrlAttachment(string requestUrl, Attachment attachment, string accessToken = null)
+        {
+            attachment.Build();
+            
+            var response = await this.ExecuteRequest<ResultResponse<Attachment>, Attachment>(HttpVerb.POST, requestUrl, attachment, accessToken: accessToken);
+
+            return response.Result;
         }
 
         public async Task<IEnumerable<Attachment>> ListAttachments(long? sheetId, string accessToken = null)
@@ -1004,8 +1110,24 @@ namespace Smartsheet.Net.Standard.Http
                 throw new Exception("Sheet ID cannot be null");
             }
             
-            var response = await this.ExecuteRequest<IndexResultResponse<Attachment>, Attachment>(HttpVerb.GET, string.Format("sheets/{0}/attachments", sheetId), null, accessToken: accessToken);
+            var response = await this.ExecuteRequest<IndexResultResponse<Attachment>, Attachment>(HttpVerb.GET,$"sheets/{sheetId}/attachments", null, accessToken: accessToken);
             return response.Data;
+        }
+
+        public async Task<Attachment> GetAttachment(long? sheetId, long? attachmentId, string accessToken = null)
+        {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+
+            if (attachmentId == null)
+            {
+                throw new Exception("Attachment ID cannot be null");
+            }
+            
+            var response = await this.ExecuteRequest<Attachment, Attachment>(HttpVerb.GET,$"sheets/{sheetId}/attachments/{attachmentId}", null, accessToken: accessToken);
+            return response;
         }
 
         #endregion

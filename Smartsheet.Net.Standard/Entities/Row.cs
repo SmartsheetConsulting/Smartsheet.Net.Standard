@@ -28,7 +28,7 @@ namespace Smartsheet.Net.Standard.Entities
 			this.LockedForUser = null;
 			this.Columns = null;
 			this.Discussions = null;
-			this.Attatchments = null;
+			this.Attachments = null;
 
 			if (!preserveId.GetValueOrDefault())
 			{
@@ -93,7 +93,7 @@ namespace Smartsheet.Net.Standard.Entities
 		public IList<Column> Columns { get; set; }
 
 		public IList<Discussion> Discussions { get; set; }
-		public IList<Attachment> Attatchments { get; set; }
+		public IList<Attachment> Attachments { get; set; }
 		
 		[JsonIgnore]
 		[JsonProperty(Required = Required.Default)]

@@ -1,4 +1,5 @@
-﻿using Smartsheet.Net.Standard.Http;
+﻿using System;
+using Smartsheet.Net.Standard.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Smartsheet.Net.Standard.Entities;
@@ -77,9 +78,26 @@ namespace Smartsheet.Net.Standard.Interfaces
 		Task<Column> DeleteColumn(long? sheetId, long? columnId, string accessToken = null); 
 
 		//  Attachments
+		[Obsolete("UploadAttachmentToRow is deprecated. Use AttachFileToRow.")]
 		Task<Attachment> UploadAttachmentToRow(long? sheetId, long? rowId, string fileName, long length, Stream data, string contentType = null, string accessToken = null);
+		[Obsolete("UploadAttachmentToRow is deprecated. Use AttachFileToRow.")]
 		Task<Attachment> UploadAttachmentToRow(long? sheetId, long? rowId, IFormFile formFile, string accessToken = null);
+
+		Task<Attachment> AttachFileToRow(long? sheetId, long? rowId, string fileName, long length, Stream stream, string contentType = null, string accessToken = null);
+		Task<Attachment> AttachFileToRow(long? sheetId, long? rowId, IFormFile formFile, string accessToken = null);
+
+		Task<Attachment> AttachFileToSheet(long? sheetId, string fileName, long length, Stream stream, string contentType = null, string accessToken = null);
+		Task<Attachment> AttachFileToSheet(long? sheetId, IFormFile formFile, string accessToken = null);
+
+		Task<Attachment> AttachUrlToRow(long? sheetId, long? rowId, string url, string name, string description, string attachmentType, string attachmentSubType, string accessToken = null);
+
+		Task<Attachment> AttachUrlToRow(long? sheetId, long? rowId, Attachment attachment, string accessToken = null);
+
+		Task<Attachment> AttachUrlToSheet(long? sheetId, string url, string name, string description, string attachmentType, string attachmentSubType, string accessToken = null);
+
+		Task<Attachment> AttachUrlToSheet(long? sheetId, Attachment attachment, string accessToken = null);
 		Task<IEnumerable<Attachment>> ListAttachments(long? sheetId, string accessToken = null);
+		Task<Attachment> GetAttachment(long? sheetId, long? attachmentId, string accessToken = null);
 		
 		//  Cross sheet refs
 		Task<IEnumerable<CrossSheetReference>> ListCrossSheetReferences(long? sheetId, string accessToken = null);
