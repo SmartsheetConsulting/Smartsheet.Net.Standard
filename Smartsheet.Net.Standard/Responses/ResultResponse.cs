@@ -11,4 +11,12 @@ namespace Smartsheet.Net.Standard.Responses
         public int Version { get; set; }
         public ICollection<BulkItemFailureResponse> FailedItems { get; set; }
     }
+    
+    public class ResultResponse : ISmartsheetResult
+    {
+        public int ResultCode { get; set; }
+        public string Message { get; set; }
+        public int Version { get; set; }
+        public ICollection<BulkItemFailureResponse> FailedItems { get; set; }
+    }
 }

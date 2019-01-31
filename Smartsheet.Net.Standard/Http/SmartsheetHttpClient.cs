@@ -18,9 +18,11 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Collections;
 using System.IO;
+using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 
 namespace Smartsheet.Net.Standard.Http
@@ -1221,7 +1223,199 @@ namespace Smartsheet.Net.Standard.Http
         }
 
         #endregion
+
+
+        #region Discussions
+        public async Task<Discussion> CreateDiscussionOnRow(long? sheetId, long? rowId, string commentText, string accessToken = null)
+        {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+            
+            if (rowId == null)
+            {
+                throw new Exception("Row ID cannot be null");
+            }
+
+            var discussion = new Discussion
+            {
+                Comment = new Comment
+                {
+                    Text = commentText
+                }
+            };
+            
+            var response = await this.ExecuteRequest<ResultResponse<Discussion>, Discussion>(HttpVerb.POST, $"sheets/{sheetId}/rows/{rowId}/discussions", discussion, accessToken: accessToken);
+
+            return response.Result;
+        }
         
+        public async Task<Discussion> CreateDiscussionOnSheet(long? sheetId, string commentText, string accessToken = null)
+        {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+
+            var discussion = new Discussion
+            {
+                Comment = new Comment
+                {
+                    Text = commentText
+                }
+            };
+            
+            var response = await this.ExecuteRequest<ResultResponse<Discussion>, Discussion>(HttpVerb.POST, $"sheets/{sheetId}/discussions", discussion, accessToken: accessToken);
+
+            return response.Result;
+        }
+        
+        public async Task<ResultResponse> DeleteDiscussion(long? sheetId, long? discussionId, string accessToken = null)
+        {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+            
+            if (discussionId == null)
+            {
+                throw new Exception("Discussion ID cannot be null");
+            }
+            
+            var response = await this.ExecuteRequest<ResultResponse, Discussion>(HttpVerb.DELETE, $"sheets/{sheetId}/discussions/{discussionId}", null, accessToken: accessToken);
+            return response;
+        }
+        
+        public async Task<IEnumerable<Discussion>> ListDiscussions(long? sheetId, bool includeAll = false, bool includeComments = false, bool includeAttachments = false, string accessToken = null)
+        {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+
+            var includeString = includeComments ? "?include=comments" + (includeAttachments ? ",attachments" : "") : "";
+
+            if (includeAll)
+            {
+                includeString += string.IsNullOrEmpty(includeString) ? "?includeAll=true" : "&includeAll=true";
+            }
+            
+            var response = await this.ExecuteRequest<IndexResultResponse<Discussion>, Discussion>(HttpVerb.GET,$"sheets/{sheetId}/discussions{includeString}", null, accessToken: accessToken);
+            return response.Data;
+        }
+        
+        public async Task<Discussion> GetDiscussion(long? sheetId, long? discussionId, string accessToken = null)
+        {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+
+            if (discussionId == null)
+            {
+                throw new Exception("Attachment ID cannot be null");
+            }
+            
+            var response = await this.ExecuteRequest<Discussion, Discussion>(HttpVerb.GET,$"sheets/{sheetId}/discussions/{discussionId}", null, accessToken: accessToken);
+            return response;
+        }
+        
+        public async Task<IEnumerable<Discussion>> ListRowDiscussions(long? sheetId, long? rowId, bool includeAll = false, bool includeComments = false, bool includeAttachments = false, string accessToken = null)
+        {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+            
+            if (rowId == null)
+            {
+                throw new Exception("Row ID cannot be null");
+            }
+
+            var includeString = includeComments ? "?include=comments" + (includeAttachments ? ",attachments" : "") : "";
+
+            if (includeAll)
+            {
+                includeString += string.IsNullOrEmpty(includeString) ? "?includeAll=true" : "&includeAll=true";
+            }
+            
+            var response = await this.ExecuteRequest<IndexResultResponse<Discussion>, Discussion>(HttpVerb.GET,$"sheets/{sheetId}/rows/{rowId}/discussions{includeString}", null, accessToken: accessToken);
+            return response.Data;
+        }
+        
+        #endregion
+
+
+        #region Comments
+        public async Task<Comment> AddComment(long? sheetId, long? discussionId, string commentText, string accessToken = null)
+        {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+            
+            if (discussionId == null)
+            {
+                throw new Exception("Discussion ID cannot be null");
+            }
+
+            var comment = new Comment
+            {
+                Text = commentText
+            };
+            
+            var response = await this.ExecuteRequest<ResultResponse<Comment>, Comment>(HttpVerb.POST, $"sheets/{sheetId}/discussions/{discussionId}/comments", comment, accessToken: accessToken);
+
+            return response.Result;
+        }
+        
+        public async Task<Comment> EditComment(long? sheetId, long? commentId, string commentText, string accessToken = null)
+        {
+            var comment = new Comment
+            {
+                Text = commentText
+            };
+            
+            var result = await this.ExecuteRequest<ResultResponse<Comment>, Comment>(HttpVerb.PUT, $"sheets/{sheetId}/comments/{commentId}", comment, accessToken: accessToken);
+
+            return result.Result;
+        }
+        
+        public async Task<ResultResponse> DeleteComment(long? sheetId, long? commentId, string accessToken = null)
+        {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+            
+            if (commentId == null)
+            {
+                throw new Exception("Comment ID cannot be null");
+            }
+            
+            var response = await this.ExecuteRequest<ResultResponse, Comment>(HttpVerb.DELETE, $"sheets/{sheetId}/comments/{commentId}", null, accessToken: accessToken);
+            return response;
+        }
+        
+        public async Task<Comment> GetComment(long? sheetId, long? commentId, string accessToken = null)
+        {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+
+            if (commentId == null)
+            {
+                throw new Exception("Comment ID cannot be null");
+            }
+            
+            var response = await this.ExecuteRequest<Comment, Comment>(HttpVerb.GET,$"sheets/{sheetId}/comments/{commentId}", null, accessToken: accessToken);
+            return response;
+        }
+
+        #endregion
+
 
         #region Users
         public async Task<User> GetCurrentUser(string accessToken = null)

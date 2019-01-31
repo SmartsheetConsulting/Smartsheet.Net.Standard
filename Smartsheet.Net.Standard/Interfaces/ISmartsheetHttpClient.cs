@@ -99,7 +99,24 @@ namespace Smartsheet.Net.Standard.Interfaces
 		Task<IEnumerable<Attachment>> ListAttachments(long? sheetId, string accessToken = null);
 		Task<Attachment> GetAttachment(long? sheetId, long? attachmentId, string accessToken = null);
 		
-		//  Cross sheet refs
+		//	Discussions
+		Task<Discussion> CreateDiscussionOnRow(long? sheetId, long? rowId, string commentText,
+			string accessToken = null);
+		Task<Discussion> CreateDiscussionOnSheet(long? sheetId, string commentText, string accessToken = null);
+		Task<ResultResponse> DeleteDiscussion(long? sheetId, long? discussionId, string accessToken = null);
+		Task<IEnumerable<Discussion>> ListDiscussions(long? sheetId, bool includeAll = false,
+			bool includeComments = false, bool includeAttachments = false, string accessToken = null);
+		Task<Discussion> GetDiscussion(long? sheetId, long? discussionId, string accessToken = null);
+		Task<IEnumerable<Discussion>> ListRowDiscussions(long? sheetId, long? rowId, bool includeAll = false,
+			bool includeComments = false, bool includeAttachments = false, string accessToken = null);
+		
+		//	Comments
+		Task<Comment> AddComment(long? sheetId, long? discussionId, string commentText, string accessToken = null);
+		Task<Comment> EditComment(long? sheetId, long? commentId, string commentText, string accessToken = null);
+		Task<ResultResponse> DeleteComment(long? sheetId, long? commentId, string accessToken = null);
+		Task<Comment> GetComment(long? sheetId, long? commentId, string accessToken = null);
+		
+		//	Cross sheet refs
 		Task<IEnumerable<CrossSheetReference>> ListCrossSheetReferences(long? sheetId, string accessToken = null);
 		Task<CrossSheetReference> CreateCrossSheetReference(long? sheetId, CrossSheetReference crossSheetReference, string accessToken = null);
 		
