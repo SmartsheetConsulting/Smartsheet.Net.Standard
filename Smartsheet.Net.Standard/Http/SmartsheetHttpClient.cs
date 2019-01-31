@@ -1026,12 +1026,102 @@ namespace Smartsheet.Net.Standard.Http
             {
                 request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
             }
+            
+            this.InitializeNewRequest();
+            
+            while (_RetryRequest && (_RetryCount < _AttemptLimit))
+            {
+                try
+                {
+                    if (_WaitTime > 0)
+                    {
+                        Thread.Sleep(_WaitTime);
+                    }
 
-            var response = await this._HttpClient.SendAsync(request);
-            var responseBody = await response.Content.ReadAsStringAsync();
-            var jsonResponseBody = JsonConvert.DeserializeObject(responseBody).ToString();
-            var resultResponse = JsonConvert.DeserializeObject<ResultResponse<Attachment>>(jsonResponseBody);
-            return resultResponse.Result;
+                    var serializerSettings = new JsonSerializerSettings()
+                    {
+                        NullValueHandling = NullValueHandling.Ignore,
+                        ContractResolver = new CamelCasePropertyNamesContractResolver()
+                    };
+
+                    var serializedData = JsonConvert.SerializeObject(data, Formatting.None, serializerSettings);
+
+                    var response = await this._HttpClient.SendAsync(request);
+                    
+                    var statusCode = response.StatusCode;
+
+                    if (statusCode == HttpStatusCode.OK)
+                    {
+                        try
+                        {
+                            var responseBody = await response.Content.ReadAsStringAsync();
+                            var jsonResponseBody = JsonConvert.DeserializeObject(responseBody).ToString();
+                            var resultResponse = JsonConvert.DeserializeObject<ResultResponse<Attachment>>(jsonResponseBody);
+                            return resultResponse.Result;
+                        }
+                        catch (Exception e)
+                        {
+                            throw e;
+                        }
+                    }
+
+                    if (statusCode.Equals(HttpStatusCode.InternalServerError) || statusCode.Equals(HttpStatusCode.ServiceUnavailable) || statusCode.Equals((HttpStatusCode)429)) // .NET doesn't have a const for this
+                    {
+                        var responseJson = await response.Content.ReadAsStringAsync();
+
+                        dynamic result = JsonConvert.DeserializeObject(responseJson);
+
+                        // did we hit an error that we should retry?
+                        int code = result["errorCode"];
+
+                        if (code == 4001)
+                        {
+                            // service may be down temporarily
+                            _WaitTime = Backoff(_WaitTime, 60 * 1000);
+                        }
+                        else if (code == 4002 || code == 4004)
+                        {
+                            // internal error or simultaneous update.
+                            _WaitTime = Backoff(_WaitTime, 1 * 1000);
+                        }
+                        else if (code == 4003)
+                        {
+                            // rate limit
+                            _WaitTime = Backoff(_WaitTime, 2 * 1000);
+                        }
+                    }
+                    else
+                    {
+                        _RetryRequest = false;
+                        dynamic result;
+                        try
+                        {
+                            var responseJson = await response.Content.ReadAsStringAsync();
+
+                            result = JsonConvert.DeserializeObject(responseJson);
+                        }
+                        catch (Exception)
+                        {
+                            throw new Exception(string.Format("HTTP Error {0}: url:[{1}]", statusCode, requestUrl));
+                        }
+
+                        var message = string.Format("HTTP Error {0} - Smartsheet error code {1}: {2} url:[{3}]", statusCode, result["errorCode"], result["message"], requestUrl);
+
+                        throw new Exception(message);
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (!_RetryRequest)
+                    {
+                        throw e;
+                    }
+                }
+
+                _RetryCount += 1;
+            }
+            
+            throw new Exception(string.Format("Retries exceeded.  url:[{0}]", requestUrl));
         }
 
         public async Task<Attachment> AttachUrlToRow(long? sheetId, long? rowId, string url, string name, string description, string attachmentType, string attachmentSubType, string accessToken = null)
