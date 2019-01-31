@@ -23,13 +23,14 @@ namespace Smartsheet.Net.Standard.Interfaces
 		Task<User> GetCurrentUserInformation(string accessToken);
 
 		//	Workspaces
-		Task<ISmartsheetObject> CreateWorkspace(string workspaceName, string accessToken = null);
-		Task<ISmartsheetObject> GetWorkspaceById(long? workspaceId, string accessToken = null, bool loadAll = false);
+		Task<Workspace> CreateWorkspace(string workspaceName, string accessToken = null);
+		Task<Workspace> GetWorkspaceById(long? workspaceId, string accessToken = null, bool loadAll = false);
 		Task<IEnumerable<Workspace>> ListWorkspaces(string accessToken = null);
 		
 		//	Sheets
 		Task<Sheet> GetSheetById(long? sheetId, string accessToken = null, string [] options = null);
 		Task<Sheet> CreateSheet(string sheetName, IEnumerable<Column> columns, string folderId = null, string workspaceId = null, string accessToken = null);
+		Task<ResultResponse> DeleteSheet(long? sheetId, string accessToken = null);
 		Task<Sheet> CreateSheetFromTemplate(string sheetName, long? templateId, long? folderId = null, long? workspaceId = null, string accessToken = null);
 		Task<Sheet> CopySheet(string newName, long? sourceSheetId, long? destinationId, DestinationType destinationType, IEnumerable<SheetCopyInclusion> includes, string accessToken = null);
 		Task<IEnumerable<Sheet>> GetSheetsForWorkspace(long? workspaceId, string accessToken = null);
@@ -42,7 +43,7 @@ namespace Smartsheet.Net.Standard.Interfaces
 		Task<CopyOrMoveRowResult> MoveRows(long? sourceSheetId, long? destinationSheetId, IEnumerable<long> rowIds, string accessToken = null);
 		Task<CopyOrMoveRowResult> CopyRows(long? sourceSheetId, long? destinationSheetId, IEnumerable<long> rowIds, string accessToken = null);
 		
-		//Folders
+		//	Folders
 		Task<Folder> CopyFolder(long? folderId, long? destinationId, string newName, string accessToken = null);
 		Task<IEnumerable<Folder>> GetFoldersForWorkspace(long? workspaceId, string accessToken = null, bool loadAll = false);
 		Task<Folder> GetFolderById(long? folderId, string accessToken = null);
@@ -52,7 +53,7 @@ namespace Smartsheet.Net.Standard.Interfaces
 		Task<IEnumerable<Report>> ListReports(string accessToken = null);
 		Task<IEnumerable<ISmartsheetObject>> GetReportsForWorkspace(long? workspaceId, string accessToken = null);
 
-		//Sights
+		//	Sights
 		Task<IEnumerable<Sight>> ListSights(string accessToken = null);
 		
 		//	Templates
@@ -62,8 +63,8 @@ namespace Smartsheet.Net.Standard.Interfaces
 		//	Update Requests
 		Task<UpdateRequest> CreateUpdateRequest(long? sheetId, IEnumerable<long> rowIds, IEnumerable<Recipient> sendTo, IEnumerable<long> columnIds, string subject = null, string message = null, bool ccMe = false, bool includeDiscussions = true, bool includeAttachments = true, string accessToken = null);
 
-        //  Send Rows
-        Task<MultiRowEmail> CreateSendRow(long? sheetId, MultiRowEmail email, string accessToken = null);
+		//	Send Rows
+		Task<MultiRowEmail> CreateSendRow(long? sheetId, MultiRowEmail email, string accessToken = null);
 
 		//	Webhooks
 		Task<IEnumerable<Webhook>> GetWebhooksForUser(string accessToken = null, bool includeAll = false);
@@ -75,7 +76,7 @@ namespace Smartsheet.Net.Standard.Interfaces
 		//	Columns
 		Task<Column> EditColumn(long? sheetId, long? columnId, Column model, string accessToken = null);
 		Task<Column> CreateColumn(long? sheetId, Column model, string accessToken = null);
-		Task<Column> DeleteColumn(long? sheetId, long? columnId, string accessToken = null); 
+		Task<ResultResponse> DeleteColumn(long? sheetId, long? columnId, string accessToken = null); 
 
 		//  Attachments
 		[Obsolete("UploadAttachmentToRow is deprecated. Use AttachFileToRow.")]
@@ -98,6 +99,7 @@ namespace Smartsheet.Net.Standard.Interfaces
 		Task<Attachment> AttachUrlToSheet(long? sheetId, Attachment attachment, string accessToken = null);
 		Task<IEnumerable<Attachment>> ListAttachments(long? sheetId, string accessToken = null);
 		Task<Attachment> GetAttachment(long? sheetId, long? attachmentId, string accessToken = null);
+		Task<ResultResponse> DeleteAttachment(long? sheetId, long? attachmentId, string accessToken = null);
 		
 		//	Discussions
 		Task<Discussion> CreateDiscussionOnRow(long? sheetId, long? rowId, string commentText,
@@ -120,22 +122,22 @@ namespace Smartsheet.Net.Standard.Interfaces
 		Task<IEnumerable<CrossSheetReference>> ListCrossSheetReferences(long? sheetId, string accessToken = null);
 		Task<CrossSheetReference> CreateCrossSheetReference(long? sheetId, CrossSheetReference crossSheetReference, string accessToken = null);
 		
-		//Users
+		//	Users
 		Task<User> GetCurrentUser(string accessToken = null);
 		Task<Home> GetHome(string accessToken = null);
 		Task<IEnumerable<User>> ListUsers(string accessToken = null, bool includeAll = false);
-		Task<ISmartsheetObject> AddUser(User user, string accessToken = null);
-		Task<ISmartsheetObject> RemoveUser(long userID, string transferTo = null, bool transferSheets = false, bool removeFromSharing = false, string accessToken = null);
+		Task<User> AddUser(User user, string accessToken = null);
+		Task<ResultResponse> RemoveUser(long userID, string transferTo = null, bool transferSheets = false, bool removeFromSharing = false, string accessToken = null);
 		Task<User> UpdateUser(long userID, bool admin, bool licensedSheetCreator, string firstName, string lastName, bool groupAdmin, bool resourceViewer, string accessToken = null);
 		
-		//Groups
+		//	Groups
 		Task<IEnumerable<Group>> ListOrgGroups(string accessToken = null, bool includeAll = false);
 		Task<Group> CreateGroup(string groupName, string description = null, List<GroupMember> members = null, string accessToken = null);
-		Task<Group> DeleteGroup(long groupId, string accessToken = null);
+		Task<ResultResponse> DeleteGroup(long groupId, string accessToken = null);
 		Task<Group> GetGroup(long? groupId, string accessToken = null);
 		Task<Group> UpdateGroup(long groupId, string groupName = null, string description = null, long? ownerId = null, string accessToken = null);
 		Task<IEnumerable<GroupMember>> AddGroupMembers(long groupId, List<GroupMember> newMembers = null, string accessToken = null);
-		Task<GroupMember> RemoveGroupMember(long groupId, long userId, string accessToken = null);
+		Task<ResultResponse> RemoveGroupMember(long groupId, long userId, string accessToken = null);
 
 	}
 }

@@ -416,7 +416,7 @@ namespace Smartsheet.Net.Standard.Http
 
 
         #region Workspaces
-        public async Task<ISmartsheetObject> CreateWorkspace(string workspaceName, string accessToken = null)
+        public async Task<Workspace> CreateWorkspace(string workspaceName, string accessToken = null)
         {
             if (string.IsNullOrWhiteSpace(workspaceName))
             {
@@ -430,7 +430,7 @@ namespace Smartsheet.Net.Standard.Http
             return response.Result;
         }
 
-        public async Task<ISmartsheetObject> GetWorkspaceById(long? workspaceId, string accessToken = null, bool loadAll = false)
+        public async Task<Workspace> GetWorkspaceById(long? workspaceId, string accessToken = null, bool loadAll = false)
         {
             if (workspaceId == null)
             {
@@ -467,6 +467,17 @@ namespace Smartsheet.Net.Standard.Http
             response.Result._Client = this;
 
             return response.Result;
+        }
+        
+        public async Task<ResultResponse> DeleteSheet(long? sheetId, string accessToken = null)
+        {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+            
+            var response = await this.ExecuteRequest<ResultResponse, Sheet>(HttpVerb.DELETE, $"sheets/{sheetId}", null, accessToken: accessToken);
+            return response;
         }
 
         public async Task<Sheet> UpdateSheet(long? sheetId, Sheet sheet, string accessToken = null)
@@ -947,15 +958,15 @@ namespace Smartsheet.Net.Standard.Http
             return result.Result;
         }
 
-        public async Task<Column> DeleteColumn(long? sheetId, long? columnId, string accessToken = null) 
+        public async Task<ResultResponse> DeleteColumn(long? sheetId, long? columnId, string accessToken = null) 
         {
-            var result = await this.ExecuteRequest<ResultResponse<Column>, Column>(HttpVerb.DELETE, string.Format("sheets/{0}/columns/{1}", sheetId, columnId), null, accessToken: accessToken);
+            var result = await this.ExecuteRequest<ResultResponse, Column>(HttpVerb.DELETE, string.Format("sheets/{0}/columns/{1}", sheetId, columnId), null, accessToken: accessToken);
 
-            return result.Result;
+            return result;
         }
 
         #endregion
-        
+
 
         #region Attachments
         [Obsolete("UploadAttachmentToRow is deprecated. Use AttachFileToRow.")]
@@ -1221,6 +1232,22 @@ namespace Smartsheet.Net.Standard.Http
             var response = await this.ExecuteRequest<Attachment, Attachment>(HttpVerb.GET,$"sheets/{sheetId}/attachments/{attachmentId}", null, accessToken: accessToken);
             return response;
         }
+        
+        public async Task<ResultResponse> DeleteAttachment(long? sheetId, long? attachmentId, string accessToken = null)
+        {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+            
+            if (attachmentId == null)
+            {
+                throw new Exception("Attachment ID cannot be null");
+            }
+            
+            var response = await this.ExecuteRequest<ResultResponse, Discussion>(HttpVerb.DELETE, $"sheets/{sheetId}/attachments/{attachmentId}", null, accessToken: accessToken);
+            return response;
+        }
 
         #endregion
 
@@ -1446,7 +1473,7 @@ namespace Smartsheet.Net.Standard.Http
 
         }
 
-        public async Task<ISmartsheetObject> AddUser(User user, string accessToken = null)
+        public async Task<User> AddUser(User user, string accessToken = null)
         {
             this._HttpClient.DefaultRequestHeaders.Add("sendEmail", "false");
 
@@ -1455,23 +1482,23 @@ namespace Smartsheet.Net.Standard.Http
             return response.Result;
         }
 
-        public async Task<ISmartsheetObject> RemoveUser(long userID, string transferTo = null, bool transferSheets = false, bool removeFromSharing = false, string accessToken = null)
+        public async Task<ResultResponse> RemoveUser(long userID, string transferTo = null, bool transferSheets = false, bool removeFromSharing = false, string accessToken = null)
         {
             if (transferTo == null)
             {
                 var thisURL = string.Format("users/{0}?removeFromSharing={1}", userID, removeFromSharing);
 
-                var response = await this.ExecuteRequest<ResultResponse<User>, User>(HttpVerb.DELETE, string.Format(thisURL), null, accessToken: accessToken);
+                var response = await this.ExecuteRequest<ResultResponse, User>(HttpVerb.DELETE, string.Format(thisURL), null, accessToken: accessToken);
 
-                return response.Result;
+                return response;
             }
             else
             {
                 var thisURL = string.Format("users/{0}?transferTo={1}&removeFromSharing={2}&transferSheets={3}", userID, transferTo, removeFromSharing, transferSheets);
 
-                var response = await this.ExecuteRequest<ResultResponse<User>, User>(HttpVerb.DELETE, string.Format(thisURL), null, accessToken: accessToken);
+                var response = await this.ExecuteRequest<ResultResponse, User>(HttpVerb.DELETE, string.Format(thisURL), null, accessToken: accessToken);
 
-                return response.Result;
+                return response;
             }
 
         }
@@ -1492,7 +1519,7 @@ namespace Smartsheet.Net.Standard.Http
         }
 
         #endregion
-        
+
 
         #region Groups
         public async Task<IEnumerable<Group>> ListOrgGroups(string accessToken = null, bool includeAll = false)
@@ -1525,10 +1552,10 @@ namespace Smartsheet.Net.Standard.Http
 
         }
 
-        public async Task<Group> DeleteGroup(long groupId, string accessToken = null)
+        public async Task<ResultResponse> DeleteGroup(long groupId, string accessToken = null)
         {
-            var response = await this.ExecuteRequest<ResultResponse<Group>, Group>(HttpVerb.DELETE, string.Format("groups/{0}", groupId), null, accessToken: accessToken);
-            return response.Result;
+            var response = await this.ExecuteRequest<ResultResponse, Group>(HttpVerb.DELETE, string.Format("groups/{0}", groupId), null, accessToken: accessToken);
+            return response;
         }
 
         public async Task<Group> GetGroup(long? groupId, string accessToken = null)
@@ -1553,14 +1580,14 @@ namespace Smartsheet.Net.Standard.Http
             return response.Data;
         }
 
-        public async Task<GroupMember> RemoveGroupMember(long groupId, long userId, string accessToken = null)
+        public async Task<ResultResponse> RemoveGroupMember(long groupId, long userId, string accessToken = null)
         {
-            var response = await this.ExecuteRequest<ResultResponse<GroupMember>, List<GroupMember>>(HttpVerb.DELETE, string.Format("groups/{0}/members/{1}", groupId, userId), null, accessToken: accessToken);
-            return response.Result;
+            var response = await this.ExecuteRequest<ResultResponse, List<GroupMember>>(HttpVerb.DELETE, string.Format("groups/{0}/members/{1}", groupId, userId), null, accessToken: accessToken);
+            return response;
         }
         #endregion
-        
-    
+
+
         #region Cross Sheet Refs 
 
         public async Task<IEnumerable<CrossSheetReference>> ListCrossSheetReferences(long? sheetId, string accessToken = null) {

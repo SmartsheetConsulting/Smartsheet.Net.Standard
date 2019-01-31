@@ -5,11 +5,6 @@ namespace Smartsheet.Net.Standard.Entities
 {
     public class Attachment : ISmartsheetObject
     {
-        public Attachment()
-        {
-
-        }
-
         public long? Id { get; set; }
         public long? ParentId { get; set; }
         public string AttachmentType { get; set; }
