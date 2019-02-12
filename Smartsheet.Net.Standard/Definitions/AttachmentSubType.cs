@@ -1,12 +1,12 @@
 namespace Smartsheet.Net.Standard.Definitions
 {
-	public enum AttachmentSubType
+	public static class AttachmentSubType
 	{
-		FOLDER,
-		DOCUMENT,
-		DRAWING,
-		PDF,
-		PRESENTATION,
-		SPREADSHEET
+		public static string Folder => "FOLDER";
+		public static string Document => "DOCUMENT";
+		public static string Drawing => "DRAWING";
+		public static string Pdf => "PDF";
+		public static string Presentation => "PRESENTATION";
+		public static string Spreadsheet => "SPREADSHEET";
 	}
 }
