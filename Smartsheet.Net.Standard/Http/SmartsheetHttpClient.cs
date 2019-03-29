@@ -92,7 +92,9 @@ namespace Smartsheet.Net.Standard.Http
         /// <param name="verb">Verb.</param>
         /// <param name="url">URL.</param>
         /// <param name="data">Data.</param>
-        /// <param name="secure">If set to <c>true</c> secure.</param>
+        /// <param name="accessToken">Smartsheet API access token.</param>
+        /// <param name="content">Form URL Encoded Content.</param>
+        /// <param name="readAsStream">Read contents of response as stream. Defaults to false.</param>
         /// <typeparam name="TResult">The 1st type parameter.</typeparam>
         /// <typeparam name="T">The 2nd type parameter.</typeparam>
         public async Task<TResult> ExecuteRequest<TResult, T>(HttpVerb verb, string url, T data, string accessToken = null, FormUrlEncodedContent content = null)
@@ -616,6 +618,151 @@ namespace Smartsheet.Net.Standard.Http
             return response.Data;
         }
 
+        private async Task<Stream> GetSheetAsFile(long? sheetId, PaperSize? paperSize, string contentType, string accessToken = null)
+        {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+
+            var url = $"sheets/{sheetId}";
+            if (paperSize.HasValue)
+            {
+                url += $"?paperSize={paperSize.Value}";
+            }
+
+            this._HttpClient.DefaultRequestHeaders.Remove("Authorization");
+
+            this._HttpClient.DefaultRequestHeaders.Remove("Smartsheet-Change-Agent");
+
+            if (accessToken != null)
+            {
+                this._HttpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
+            }
+            else
+            {
+                this._HttpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + this._AccessToken);
+            }
+
+            if (this._ChangeAgent != null)
+            {
+                this._HttpClient.DefaultRequestHeaders.Add("Smartsheet-Change-Agent", this._ChangeAgent);
+            }
+            
+            this._HttpClient.DefaultRequestHeaders.Accept.Clear();
+            this._HttpClient.DefaultRequestHeaders.Add("Accept", contentType);
+
+            this.ValidateClientParameters();
+
+            this.InitializeNewRequest();
+
+            while (_RetryRequest && (_RetryCount < _AttemptLimit))
+            {
+                try
+                {
+                    if (_WaitTime > 0)
+                    {
+                        Thread.Sleep(_WaitTime);
+                    }
+
+                    var response = await this._HttpClient.GetAsync(url);
+
+                    var statusCode = response.StatusCode;
+
+                    switch (statusCode)
+                    {
+                        case HttpStatusCode.OK:
+                        {
+                            try
+                            {
+                                return await response.Content.ReadAsStreamAsync();
+                            }
+                            catch (Exception e)
+                            {
+                                throw e;
+                            }
+
+                        }
+                        case HttpStatusCode.InternalServerError:
+                        case HttpStatusCode.ServiceUnavailable:
+                        // .NET doesn't have a const for this
+                        case (HttpStatusCode)429:
+                        {
+                            var responseJson = await response.Content.ReadAsStringAsync();
+
+                            dynamic result = JsonConvert.DeserializeObject(responseJson);
+
+                            // did we hit an error that we should retry?
+                            int code = result["errorCode"];
+
+                            if (code == 4001)
+                            {
+                                // service may be down temporarily
+                                this._WaitTime = Backoff(this._WaitTime, 60 * 1000);
+                            }
+                            else if (code == 4002 || code == 4004)
+                            {
+                                // internal error or simultaneous update.
+                                this._WaitTime = Backoff(this._WaitTime, 1 * 1000);
+                            }
+                            else if (code == 4003)
+                            {
+                                // rate limit
+                                this._WaitTime = Backoff(this._WaitTime, 2 * 1000);
+                            }
+
+                            break;
+                        }
+                        default:
+                        {
+                            this._RetryRequest = false;
+                            dynamic result;
+                            try
+                            {
+                                var responseJson = await response.Content.ReadAsStringAsync();
+
+                                result = JsonConvert.DeserializeObject(responseJson);
+                            }
+                            catch (Exception)
+                            {
+                                throw new Exception(string.Format("HTTP Error {0}: url:[{1}]", statusCode, url));
+                            }
+
+                            var message = string.Format("HTTP Error {0} - Smartsheet error code {1}: {2} url:[{3}]", statusCode, result["errorCode"], result["message"], url);
+
+                            throw new Exception(message);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (!_RetryRequest)
+                    {
+                        throw e;
+                    }
+                }
+
+                _RetryCount += 1;
+            }
+
+            throw new Exception(string.Format("Retries exceeded.  url:[{0}]", url));
+        }
+        
+        public async Task<Stream> GetSheetAsExcel(long? sheetId)
+        {
+            return await GetSheetAsFile(sheetId, null, "application/vnd.ms-excel");
+        }
+        
+        public async Task<Stream> GetSheetAsPdf(long? sheetId, PaperSize? paperSize)
+        {
+            return await GetSheetAsFile(sheetId, paperSize, "application/pdf");
+        }
+
+        public async Task<Stream> GetSheetAsCsv(long? sheetId)
+        {
+            return await GetSheetAsFile(sheetId, null, "text/csv");
+        }
+
         #endregion
 
 
@@ -1021,6 +1168,8 @@ namespace Smartsheet.Net.Standard.Http
         {
             this._HttpClient.DefaultRequestHeaders.Remove("Authorization");
             this.SetAuthorizationHeader(accessToken);
+            this._HttpClient.DefaultRequestHeaders.Accept.Clear();
+            this._HttpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
             byte[] data;
             using (var br = new BinaryReader(stream))

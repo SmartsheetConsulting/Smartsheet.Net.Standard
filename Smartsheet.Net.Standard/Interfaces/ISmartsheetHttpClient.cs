@@ -37,6 +37,9 @@ namespace Smartsheet.Net.Standard.Interfaces
 		Task<Sheet> UpdateSheet(long? sheetId, Sheet sheet, string accessToken = null);
 		Task<IEnumerable<Sheet>> ListSheets(string accessToken = null);
 		Task<IEnumerable<Sheet>> ListAllSheetsAndVersions(string accessToken = null);
+		Task<Stream> GetSheetAsExcel(long? sheetId);
+		Task<Stream> GetSheetAsPdf(long? sheetId, PaperSize? paperSize);
+		Task<Stream> GetSheetAsCsv(long? sheetId);
 		
 		//	Rows
 		Task<IEnumerable<Row>> CreateRows(long? sheetId, IEnumerable<Row> rows, bool? toTop = null, bool? toBottom = null, long? parentId = null, long? siblingId = null, string accessToken = null);
