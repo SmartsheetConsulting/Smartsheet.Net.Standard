@@ -1760,5 +1760,64 @@ namespace Smartsheet.Net.Standard.Http
         }
 
         #endregion
+
+        #region Shares
+        
+        public async Task<IEnumerable<Share>> ShareWorkspace(long? workspaceId, IEnumerable<Share> shares, bool sendEmail = false, string accessToken = null)
+        {
+            if (workspaceId == null)
+            {
+                throw new Exception("Workspace ID cannot be null");
+            }
+
+            var response = await this.ExecuteRequest<ResultResponse<IEnumerable<Share>>, IEnumerable<Share>>(HttpVerb.POST,
+                string.Format("workspaces/{0}/shares?sendEmail={1}", workspaceId, sendEmail), shares, accessToken);
+
+            return response.Result;
+        }
+
+        public async Task<IEnumerable<Share>> ShareReport(long? reportId, IEnumerable<Share> shares, bool sendEmail = false, string accessToken = null)
+        {
+            if (reportId == null)
+            {
+                throw new Exception("Report ID cannot be null");
+            }
+
+            var response = await this.ExecuteRequest<ResultResponse<IEnumerable<Share>>, IEnumerable<Share>>(
+                HttpVerb.POST, string.Format("reports/{0}/shares?sendEmail={1}", reportId, sendEmail), shares,
+                accessToken);
+
+            return response.Result;
+        }
+
+        public async Task<IEnumerable<Share>> ShareSheet(long? sheetId, IEnumerable<Share> shares, bool sendEmail = false, string accessToken = null)
+        {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+
+            var response = await this.ExecuteRequest<ResultResponse<IEnumerable<Share>>, IEnumerable<Share>>(
+                HttpVerb.POST, string.Format("sheets/{0}/shares?sendEmail={1}", sheetId, sendEmail), shares,
+                accessToken);
+
+            return response.Result;
+        }
+        
+        public async Task<IEnumerable<Share>> ShareDashboard(long? dashboardId, IEnumerable<Share> shares, bool sendEmail = false, string accessToken = null)
+        {
+            if (dashboardId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+
+            var response = await this.ExecuteRequest<ResultResponse<IEnumerable<Share>>, IEnumerable<Share>>(
+                HttpVerb.POST, string.Format("sights/{0}/shares?sendEmail={1}", dashboardId, sendEmail), shares,
+                accessToken);
+
+            return response.Result;
+        }
+        
+        #endregion
     }
 }
