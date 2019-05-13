@@ -1808,7 +1808,7 @@ namespace Smartsheet.Net.Standard.Http
         {
             if (dashboardId == null)
             {
-                throw new Exception("Sheet ID cannot be null");
+                throw new Exception("Dashboard ID cannot be null");
             }
 
             var response = await this.ExecuteRequest<ResultResponse<IEnumerable<Share>>, IEnumerable<Share>>(
