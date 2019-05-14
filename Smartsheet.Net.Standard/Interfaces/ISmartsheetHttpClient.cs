@@ -31,7 +31,7 @@ namespace Smartsheet.Net.Standard.Interfaces
 		Task<IEnumerable<Share>> ShareWorkspace(long? workspaceId, IEnumerable<Share> shares, bool sendEmail = false, string accessToken = null);
 		Task<IEnumerable<Share>> ShareReport(long? reportId, IEnumerable<Share> shares, bool sendEmail = false, string accessToken = null);
 		Task<IEnumerable<Share>> ShareSheet(long? sheetId, IEnumerable<Share> shares, bool sendEmail = false, string accessToken = null);
-		Task<IEnumerable<Share>> ShareDashboard(long? dashboardId, IEnumerable<Share> shares, bool sendEmail = false, string accessToken = null);
+		Task<IEnumerable<Share>> ShareSight(long? sightId, IEnumerable<Share> shares, bool sendEmail = false, string accessToken = null);
 		//	Sheets
 		Task<Sheet> GetSheetById(long? sheetId, string accessToken = null, string [] options = null);
 		Task<Sheet> CreateSheet(string sheetName, IEnumerable<Column> columns, string folderId = null, string workspaceId = null, string accessToken = null);

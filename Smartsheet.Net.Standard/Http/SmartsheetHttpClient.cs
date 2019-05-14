@@ -1769,6 +1769,8 @@ namespace Smartsheet.Net.Standard.Http
             {
                 throw new Exception("Workspace ID cannot be null");
             }
+            
+            shares.ToList().ForEach(s => s.Build());
 
             var response = await this.ExecuteRequest<ResultResponse<IEnumerable<Share>>, IEnumerable<Share>>(HttpVerb.POST,
                 string.Format("workspaces/{0}/shares?sendEmail={1}", workspaceId, sendEmail), shares, accessToken);
@@ -1782,6 +1784,8 @@ namespace Smartsheet.Net.Standard.Http
             {
                 throw new Exception("Report ID cannot be null");
             }
+            
+            shares.ToList().ForEach(s => s.Build());
 
             var response = await this.ExecuteRequest<ResultResponse<IEnumerable<Share>>, IEnumerable<Share>>(
                 HttpVerb.POST, string.Format("reports/{0}/shares?sendEmail={1}", reportId, sendEmail), shares,
@@ -1797,6 +1801,8 @@ namespace Smartsheet.Net.Standard.Http
                 throw new Exception("Sheet ID cannot be null");
             }
 
+            shares.ToList().ForEach(s => s.Build());
+            
             var response = await this.ExecuteRequest<ResultResponse<IEnumerable<Share>>, IEnumerable<Share>>(
                 HttpVerb.POST, string.Format("sheets/{0}/shares?sendEmail={1}", sheetId, sendEmail), shares,
                 accessToken);
@@ -1804,15 +1810,17 @@ namespace Smartsheet.Net.Standard.Http
             return response.Result;
         }
         
-        public async Task<IEnumerable<Share>> ShareDashboard(long? dashboardId, IEnumerable<Share> shares, bool sendEmail = false, string accessToken = null)
+        public async Task<IEnumerable<Share>> ShareSight(long? sightId, IEnumerable<Share> shares, bool sendEmail = false, string accessToken = null)
         {
-            if (dashboardId == null)
+            if (sightId == null)
             {
-                throw new Exception("Dashboard ID cannot be null");
+                throw new Exception("Sight ID cannot be null");
             }
+            
+            shares.ToList().ForEach(s => s.Build());
 
             var response = await this.ExecuteRequest<ResultResponse<IEnumerable<Share>>, IEnumerable<Share>>(
-                HttpVerb.POST, string.Format("sights/{0}/shares?sendEmail={1}", dashboardId, sendEmail), shares,
+                HttpVerb.POST, string.Format("sights/{0}/shares?sendEmail={1}", sightId, sendEmail), shares,
                 accessToken);
 
             return response.Result;
