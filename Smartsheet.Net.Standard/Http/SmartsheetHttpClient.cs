@@ -17,14 +17,10 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Collections;
-using System.ComponentModel.Design;
 using System.IO;
-using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 
 namespace Smartsheet.Net.Standard.Http
 {
@@ -1984,7 +1980,7 @@ namespace Smartsheet.Net.Standard.Http
 
         #region Cell History
 
-        public async Task<CellHistory> GetCellHistory(long? sheetId, long? rowId, long? columnId, string accessToken = null)
+        public async Task<IEnumerable<CellHistory>> GetCellHistory(long? sheetId, long? rowId, long? columnId, string accessToken = null)
         {
             if (sheetId == null)
             {
@@ -2001,11 +1997,11 @@ namespace Smartsheet.Net.Standard.Http
                 throw new Exception("Column ID cannot be null");
             }
 
-            var response = await this.ExecuteRequest<CellHistory, CellHistory>(HttpVerb.GET,
-                string.Format("sheets/{0}/rows/{1}/columns/{2}/history", sheetId, rowId, columnId), null,
+            var response = await this.ExecuteRequest<IndexResultResponse<CellHistory>, CellHistory>(HttpVerb.GET,
+                string.Format("sheets/{0}/rows/{1}/columns/{2}/history?include", sheetId, rowId, columnId), null,
                 accessToken: accessToken);
 
-            return response;
+            return response.Data;
 
         }
 
