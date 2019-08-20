@@ -1832,8 +1832,6 @@ namespace Smartsheet.Net.Standard.Http
 
         public async Task<IEnumerable<CellHistory>> GetCellHistory(long? sheetId, long? rowId, long? columnId, IEnumerable<CellInclusions> includes = null, string accessToken = null)
         {
-            includes = includes ?? new List<CellInclusions>();
-            
             if (sheetId == null)
             {
                 throw new Exception("Sheet ID cannot be null");
@@ -1855,8 +1853,7 @@ namespace Smartsheet.Net.Standard.Http
             {
                 includeString += string.Format("?include={0}", string.Join(",", includes.Select(i => i.ToString().ToCamelCase())));
             }
-
-
+            
             var response = await this.ExecuteRequest<IndexResultResponse<CellHistory>, CellHistory>(HttpVerb.GET,
                 string.Format("sheets/{0}/rows/{1}/columns/{2}/history" + includeString, sheetId, rowId, columnId), null,
                 accessToken: accessToken);
