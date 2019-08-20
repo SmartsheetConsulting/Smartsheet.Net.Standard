@@ -1827,5 +1827,41 @@ namespace Smartsheet.Net.Standard.Http
         }
         
         #endregion
+
+        #region Cell History
+
+        public async Task<IEnumerable<CellHistory>> GetCellHistory(long? sheetId, long? rowId, long? columnId, IEnumerable<CellInclusions> includes = null, string accessToken = null)
+        {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+
+            if (rowId == null)
+            {
+                throw new Exception("Row ID cannot be null");
+            }
+
+            if (columnId == null)
+            {
+                throw new Exception("Column ID cannot be null");
+            }
+            
+            string includeString = "";
+
+            if (includes != null && includes.Count() > 0)
+            {
+                includeString += string.Format("?include={0}", string.Join(",", includes.Select(i => i.ToString().ToCamelCase())));
+            }
+            
+            var response = await this.ExecuteRequest<IndexResultResponse<CellHistory>, CellHistory>(HttpVerb.GET,
+                string.Format("sheets/{0}/rows/{1}/columns/{2}/history" + includeString, sheetId, rowId, columnId), null,
+                accessToken: accessToken);
+
+            return response.Data;
+
+        }
+
+        #endregion
     }
 }

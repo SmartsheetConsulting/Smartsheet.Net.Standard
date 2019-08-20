@@ -21,6 +21,7 @@ namespace Smartsheet.Net.Standard.Entities
         public string LastName { get; set; }
         public string Status { get; set; }
 
+        public string Timezone { get; set; }
         public bool? Admin { get; set; }
         public bool? LicensedSheetCreator { get; set; }
         public bool? GroupAdmin { get; set; }

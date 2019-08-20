@@ -85,6 +85,9 @@ namespace Smartsheet.Net.Standard.Interfaces
 		Task<Column> EditColumn(long? sheetId, long? columnId, Column model, string accessToken = null);
 		Task<Column> CreateColumn(long? sheetId, Column model, string accessToken = null);
 		Task<ResultResponse> DeleteColumn(long? sheetId, long? columnId, string accessToken = null); 
+		
+		//Cell History
+		Task<IEnumerable<CellHistory>> GetCellHistory(long? sheetId, long? rowId, long? columnId, IEnumerable<CellInclusions> includes, string accessToken = null);
 
 		//  Attachments
 		[Obsolete("UploadAttachmentToRow is deprecated. Use AttachFileToRow.")]
