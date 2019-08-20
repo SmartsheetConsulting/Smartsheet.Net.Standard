@@ -6,6 +6,6 @@ namespace Smartsheet.Net.Standard.Entities
     public class CellHistory : Cell
     {
         public DateTime ModifiedAt { get; set; }
-        public ContactOptions ModifiedBy { get; set; }
+        public ContactOptions User { get; set; }
     }
 }
