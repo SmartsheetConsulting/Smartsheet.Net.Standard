@@ -1848,9 +1848,17 @@ namespace Smartsheet.Net.Standard.Http
             {
                 throw new Exception("Column ID cannot be null");
             }
+            
+            string includeString = "";
+
+            if (includes != null && includes.Count() > 0)
+            {
+                includeString += string.Format("?include={0}", string.Join(",", includes.Select(i => i.ToString().ToCamelCase())));
+            }
+
 
             var response = await this.ExecuteRequest<IndexResultResponse<CellHistory>, CellHistory>(HttpVerb.GET,
-                string.Format("sheets/{0}/rows/{1}/columns/{2}/history?include=" + string.Join(",", includes), sheetId, rowId, columnId), null,
+                string.Format("sheets/{0}/rows/{1}/columns/{2}/history" + includeString, sheetId, rowId, columnId), null,
                 accessToken: accessToken);
 
             return response.Data;
