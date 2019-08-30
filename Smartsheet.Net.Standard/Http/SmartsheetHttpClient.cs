@@ -1131,6 +1131,17 @@ namespace Smartsheet.Net.Standard.Http
         public async Task<Attachment> AttachFileToRow(long? sheetId, long? rowId, string fileName, long length,
             Stream stream, string contentType = null, string accessToken = null)
         {
+
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+
+            if (rowId == null)
+            {
+                throw new Exception("Row ID cannot be null");
+            }
+            
             var url = $"https://api.smartsheet.com/2.0/sheets/{sheetId}/rows/{rowId}/attachments";
 
             return await UploadFileAttachment(url, fileName, length, stream, contentType, accessToken);
@@ -1148,6 +1159,11 @@ namespace Smartsheet.Net.Standard.Http
         
         public async Task<Attachment> AttachFileToSheet(long? sheetId, string fileName, long length, Stream stream, string contentType = null, string accessToken = null)
         {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+
             var url = $"https://api.smartsheet.com/2.0/sheets/{sheetId}/attachments";
 
             return await UploadFileAttachment(url, fileName, length, stream, contentType, accessToken);
@@ -1302,6 +1318,16 @@ namespace Smartsheet.Net.Standard.Http
 
         public async Task<Attachment> AttachUrlToRow(long? sheetId, long? rowId, Attachment attachment, string accessToken = null)
         {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+            
+            if (rowId == null)
+            {
+                throw new Exception("Row ID cannot be null");
+            }
+            
             var requestUrl = $"https://api.smartsheet.com/2.0/sheets/{sheetId}/rows/{rowId}/attachments";
             
             var attachmentCopy = new Attachment
@@ -1332,6 +1358,11 @@ namespace Smartsheet.Net.Standard.Http
         
         public async Task<Attachment> AttachUrlToSheet(long? sheetId, Attachment attachment, string accessToken = null)
         {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+
             var requestUrl = $"https://api.smartsheet.com/2.0/sheets/{sheetId}/attachments";
             
             var attachmentCopy = new Attachment
@@ -1396,6 +1427,32 @@ namespace Smartsheet.Net.Standard.Http
             
             var response = await this.ExecuteRequest<ResultResponse, Discussion>(HttpVerb.DELETE, $"sheets/{sheetId}/attachments/{attachmentId}", null, accessToken: accessToken);
             return response;
+        }
+
+        public async Task<Attachment> AttachNewFileVersion(long? sheetId, long? attachmentId, string fileName, long length, Stream stream, string contentType = null, string accessToken = null)
+        {
+            if (sheetId == null)
+            {
+                throw new Exception("Sheet ID cannot be null");
+            }
+            
+            if (attachmentId == null)
+            {
+                throw new Exception("Attachment ID cannot be null");
+            }
+            
+            var url = $"https://api.smartsheet.com/2.0/sheets/{sheetId}/attachments/{attachmentId}/versions";
+
+            return await UploadFileAttachment(url, fileName, length, stream, contentType, accessToken);
+        }
+
+        public async Task<Attachment> AttachNewFileVersion(long? sheetId, long? attachmentId, IFormFile formFile, string accessToken = null)
+        {
+            using (var stream = formFile.OpenReadStream())
+            {
+                var response = await this.AttachNewFileVersion(sheetId, attachmentId, formFile.FileName, formFile.Length, stream, formFile.ContentType, accessToken);
+                return response;
+            }
         }
 
         #endregion

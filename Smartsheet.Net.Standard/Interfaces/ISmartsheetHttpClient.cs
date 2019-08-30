@@ -111,7 +111,8 @@ namespace Smartsheet.Net.Standard.Interfaces
 		Task<IEnumerable<Attachment>> ListAttachments(long? sheetId, string accessToken = null);
 		Task<Attachment> GetAttachment(long? sheetId, long? attachmentId, string accessToken = null);
 		Task<ResultResponse> DeleteAttachment(long? sheetId, long? attachmentId, string accessToken = null);
-		
+		Task<Attachment> AttachNewFileVersion(long? sheetId, long? attachmentId, string fileName, long length, Stream stream, string contentType = null, string accessToken = null);
+		Task<Attachment> AttachNewFileVersion(long? sheetId, long? attachmentId, IFormFile formFile, string accessToken = null);
 		//	Discussions
 		Task<Discussion> CreateDiscussionOnRow(long? sheetId, long? rowId, string commentText,
 			string accessToken = null);
