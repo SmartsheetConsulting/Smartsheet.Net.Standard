@@ -1398,6 +1398,22 @@ namespace Smartsheet.Net.Standard.Http
             return response;
         }
 
+        public async Task<Attachment> AttachNewFileVersion(long? sheetId, long? attachmentId, string fileName, long length, Stream stream, string contentType = null, string accessToken = null)
+        {
+            var url = $"https://api.smartsheet.com/2.0/sheets/{sheetId}/attachments/{attachmentId}/versions";
+
+            return await UploadFileAttachment(url, fileName, length, stream, contentType, accessToken);
+        }
+
+        public async Task<Attachment> AttachNewFileVersion(long? sheetId, long? attachmentId, IFormFile formFile, string accessToken = null)
+        {
+            using (var stream = formFile.OpenReadStream())
+            {
+                var response = await this.AttachNewFileVersion(sheetId, attachmentId, formFile.FileName, formFile.Length, stream, formFile.ContentType, accessToken);
+                return response;
+            }
+        }
+
         #endregion
 
 
