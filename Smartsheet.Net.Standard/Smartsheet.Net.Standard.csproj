@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Smartsheet.Net.Standard</PackageId>
-    <PackageVersion>2.0.20</PackageVersion>
+    <PackageVersion>2.0.21</PackageVersion>
     <Authors>Austen DeWolf, Bobby Dick, Misha Berman, Seth Martin, Eric Filipowicz</Authors>
     <Description>Smartsheet C# SDK to facilitate HTTP Requests against the Smartsheet API (api.smartsheet.com)</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Implement Attachment Version POST endpoint.</PackageReleaseNotes>
+    <PackageReleaseNotes>Critical fix for Attachment Version endpoint.</PackageReleaseNotes>
     <Copyright>Copyright 2018 (c)</Copyright>
     <PackageTags>smartsheet professional-services sdk</PackageTags>
   </PropertyGroup>
