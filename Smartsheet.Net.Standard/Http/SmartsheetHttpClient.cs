@@ -918,6 +918,18 @@ namespace Smartsheet.Net.Standard.Http
 
             return response.Result;
         }
+        
+        public async Task<ResultResponse> DeleteFolder(long? folderId, string accessToken = null)
+        {
+            if (folderId == null)
+            {
+                throw new Exception("Folder ID cannot be null");
+            }
+
+            var response = await this.ExecuteRequest<ResultResponse, Folder>(HttpVerb.DELETE, string.Format("folders/{0}", folderId), null, accessToken: accessToken);
+
+            return response;
+        }
 
         #endregion
 

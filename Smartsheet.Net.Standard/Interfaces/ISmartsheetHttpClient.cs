@@ -56,6 +56,7 @@ namespace Smartsheet.Net.Standard.Interfaces
 		Task<IEnumerable<Folder>> GetFoldersForWorkspace(long? workspaceId, string accessToken = null, bool loadAll = false);
 		Task<Folder> GetFolderById(long? folderId, string accessToken = null);
 		Task<IEnumerable<Row>> LockRows(long? sheetId, bool locked, IEnumerable<long?> rowIds, string accessToken = null);
+		Task<ResultResponse> DeleteFolder(long? folderId, string accessToken = null);
 		
 		//	Reports
 		Task<IEnumerable<Report>> ListReports(string accessToken = null);
